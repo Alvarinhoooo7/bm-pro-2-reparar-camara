@@ -1,2 +1,0 @@
-setenv init /bin/sh
-run bootcmd

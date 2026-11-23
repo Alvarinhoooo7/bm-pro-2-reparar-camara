@@ -27,3 +27,8 @@ desktop.ini
 herramienta/afx/afx
 herramienta/afx/afx_pc.exe
 *.pdb
+
+# Restos del registrador UART si se corre dentro de pruebas/
+pruebas/tx.txt
+pruebas/uart.log
+pruebas/stop.flag
