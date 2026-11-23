@@ -129,6 +129,17 @@ Linux: `/init` monta el overlay → `rcS` → `rc.final` ejecuta `/etc/init.d/S?
   `0x16BD14` (boot+0xFBD14): `0x0B → 0x4B` (bit 6, 0→1). Una celda NOR que perdió carga (retención). Todo lo demás idéntico.
 - Es la misma falla en todas las cámaras muertas vistas. Que pase en muchas unidades apunta a un **lote de flash débil o a una grabación de fábrica marginal** (vale la pena reclamar al proveedor).
 - **Segundo modo de falla (descubierto 2026-11-23):** un bit perdido en **riscv0** → `Unable to handle kernel NULL pointer dereference` → `Kernel panic` a los ~3 s al cargar el coprocesador (`Load mpp modules`) → también bucle. Lo cubre la auto-reparación.
+- **Tercer modo de falla (cámara real `2c000c3c140089a17d3`, 2026-11-23):** **2 bits perdidos en `/usr`** (partición `extend`, squashfs), ambos 0→1:
+  `0x07595F2: 0xD4→0xF4` y `0x088A17A: 0x56→0x5E`. El kernel arranca, pero dmesg muestra
+  `SQUASHFS error: Unable to read fragment cache entry [3432e]` → la app no puede leer sus archivos → deja de
+  alimentar el watchdog (16 s) → **reinicio cada ~20 s**. Hay ADB durante ~15 s de cada ciclo: alcanza para
+  repararla con el .exe en modo ADB (lo hace en ~10 s). La auto-reparación **no** cubre `/usr` ni `rootfs` (ver §11).
+
+| Modo | Dónde | Síntoma | ¿Se repara sola con la protección? | ¿La repara el .exe? |
+|---|---|---|---|---|
+| 1 | kernel (`boot`) | bucle a ~1 s, `uncompress error` (sin Linux, sin ADB) | **Sí** | Sí (FEL) |
+| 2 | `riscv0` | kernel panic a ~3 s, `Load mpp modules` | **Sí** | Sí |
+| 3 | `/usr` (`extend`) o `rootfs` | arranca, errores SQUASHFS, reinicio por watchdog a ~20 s (ADB unos 15 s) | No | **Sí (ADB, en la ventana)** |
 
 ---
 
@@ -262,6 +273,18 @@ Log completo: `logs/uart/COM15_2026-11-23_pruebas_autofix.log`.
 | 18 | .exe modo ADB: "Simular falla kernel" | Daña, reinicia, se repara sola; diagnóstico OK |
 | 19 | Cámara a estado de fábrica → .exe "Reparar y proteger" (modo normal) | Instalado y verificado en **13 s**; arranque `bootdelay=0`, `kernel OK`, `boot complete` a los 12 s (sin demora) |
 
+### 2026-11-23 — Primera cámara real reparada con el .exe (serie `2c000c3c140089a17d3`)
+
+Registros: `Documentos\ReparadorCamarasV821\20261123_115810_...` (reparación) y `..._115833_...` (diagnóstico posterior).
+Volcado de la `extend` dañada: `volcados/camara_89a17d3/extend.bin` (MD5 `5050a36d6e8704e9cd76a12a2646973c`).
+
+| # | Prueba | Resultado |
+|---|---|---|
+| 20 | Conectar la cámara "mala" por USB | **Aparece por ADB** a intervalos: no es el modo 1. Kernel, riscv0, rootfs y env sanos (MD5) |
+| 21 | Comparar `extend` con `usr.fex` | **2 bits perdidos** (0→1) en 2 bloques; dmesg: `SQUASHFS error ... [3432e]`; reinicio por watchdog cada ~20 s |
+| 22 | .exe "Reparar y proteger" (modo ADB) dentro de la ventana | **Una sola pasada, 10 s**: 2 bloques reescritos + copia + env + script, todo verificado |
+| 23 | Después | Encendida >100 s sin reiniciarse, 0 errores SQUASHFS, `/usr` idéntico al original; diagnóstico "Camara sana y protegida" |
+
 ---
 
 ## 9. Callejones sin salida (NO repetir)
@@ -318,7 +341,12 @@ Desinstalar la protección a mano (dejarla como de fábrica): escribir el env or
   (2) confirmar que **xfel** responde en ese modo (en la placa 2 sí funcionó xfel, así que probablemente es el mismo);
   (3) correr el .exe en modo FEL sobre una cámara muerta de verdad. Plan B mientras tanto: PhoenixSuit + .exe por ADB.
 - [ ] **Bits en el DTB** (final de `boot`, 0x294000–0x2A3000, ~2 % del kernel): U-Boot carga el DTB desde la partición dañada antes del script → Linux se cuelga. Se repara con el .exe (FEL). Idea: usar `set_working_fdt` / `fdt` con el DTB de la copia.
-- [ ] **rootfs / usr** no se auto-reparan (no caben como copia). El .exe sí los detecta y los repara.
+- [ ] **rootfs / usr** no se auto-reparan (no caben como copia). El .exe sí los detecta y los repara. **Ya pasó en una cámara real** (modo 3, §3).
+  Idea: **paridad XOR por grupos de bloques** en el espacio libre (quedan 0xD0000 en `extend_backup` tras la copia y
+  0x190000 al final de `extend`) + tabla de MD5 por bloque de 64 KB: el bloque dañado se identifica por su MD5 y se
+  reconstruye con la paridad XOR del resto del grupo. BusyBox no puede hacer XOR binario en shell → necesita un pequeño
+  binario compilado para la cámara (RISC-V rv32, glibc del firmware) o un helper en el kernel. Alternativa más simple:
+  corrección de 1 bit por bloque con CRC por bloque (también necesita binario).
 - [ ] **Mejora barata:** que la capa U-Boot también se desactive con OTA pendiente (`run af_s_${extend_partition}${swu_mode} ...`). Hoy solo mira `extend_partition`. Si alguna vez se usa OTA en estas cámaras, revisar antes.
 - [ ] Si la app o un "reset de fábrica" borra el overlay (`rootfs_data`), se pierde `S00autofix`: la capa U-Boot sigue funcionando, pero ya no se repara la flash ni se protege riscv0. El diagnóstico del .exe lo muestra ("script Linux no instalado").
 - [ ] Confirmar con el monitor que la placa de prueba sigue emparejada después de instalar la protección.

@@ -51,7 +51,25 @@ Para comprobar después, se puede pulsar **1. Diagnosticar**: debe decir **"Cama
 
 ---
 
-## 4. Cámara muerta (no arranca, bucle de reinicio)
+## 4a. Cámara que arranca pero se reinicia sola (cada ~20 s)
+
+Es la falla en `/usr`: la cámara enciende, pero a los ~20 s se reinicia, una y otra vez.
+El programa la repara por ADB como en el §3, con una diferencia: **hay que pulsar a tiempo**.
+
+1. Conectarla por USB y esperar a que arriba diga **"Camara encendida conectada por ADB - lista"**.
+   Ese mensaje aparece y desaparece con cada reinicio.
+2. Apenas aparezca, pulsar **2. Reparar y proteger**. Tarda unos 10 s y repara primero los bloques dañados.
+3. Si sale un **error** porque se reinició en medio, no pasa nada: esperar a que vuelva a decir "lista" y pulsar
+   otra vez. Cuando los bloques dañados quedan reparados, deja de reiniciarse.
+4. Pulsar **1. Diagnosticar**: debe decir **"Camara sana y protegida"**.
+
+> Probado en una cámara real el 2026-11-23: se reparó en una sola pasada de 10 s.
+
+---
+
+## 4b. Cámara muerta (no arranca nunca, bucle de reinicio)
+
+Si **nunca** aparece "conectada por ADB", la cámara está muerta de verdad (falla en el kernel).
 
 Hay que entrar en **modo FEL** (modo de grabación del chip por USB).
 
@@ -132,6 +150,7 @@ Bajo cada parte dañada aparece la dirección exacta del byte, por ejemplo:
 | **Camara sana y protegida** | Nada. |
 | **Camara sana, falta instalar la proteccion** | Pulsar **Reparar y proteger**. |
 | **Camara con N bit(s) danados** | Pulsar **Reparar y proteger**. |
+| **Fallo la lectura/escritura por ADB...** | La cámara se reinició en medio (pasa con la falla de `/usr`, §4a). Esperar a "lista" y repetir. |
 | **Reparada por FEL. Falta conectarla encendida (ADB)...** | Dejarla arrancar y repetir **Reparar y proteger** con la cámara encendida. |
 | **Firmware distinto: no se modifico nada** | No es la v0.1.5, o tiene demasiadas diferencias. No usar el programa con esta cámara; revisar a mano. |
 | **Esta camara tuvo/tiene una actualizacion OTA** | Tiene una actualización del sistema. Por seguridad no se instala la protección. |
