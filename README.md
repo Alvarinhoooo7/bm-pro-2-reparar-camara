@@ -213,7 +213,7 @@ bloque de 64 KB, generado con `afx init` cuando la flash está verificada contra
   FEL hasta que exista el **modo rescate** (§11).
 - Códigos de salida: 0 OK, 1 error, 2 reparado y hace falta reiniciar, 3 daños no reparables, 4 (`check`) daños reparables.
 - Pruebas en el PC: `python pruebas/test_afx.py` (20 casos sobre la imagen real, incluido el caso de la cámara 89a17d3).
-- Compilar: `vendor\zig\zig.exe cc -target riscv32-linux-musl -static -O2 -s -o herramientafxfx herramientafxfx.c`
+- Compilar: `vendor\zig\zig.exe cc -target riscv32-linux-musl -static -O2 -s -o herramienta\afx\afx herramienta\afx\afx.c`
   (y `zig cc -O2 -o afx_pc.exe afx.c` para las pruebas en el PC). Zig 0.17.1 portable: https://ziglang.org/download/
 
 ### Copia en `extend_backup`
