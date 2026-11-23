@@ -9,8 +9,8 @@ Investigación, reparación y **auto-reparación** de las cámaras del baby moni
 > Linux + afx con corrección de 1 bit y paridad, más modo rescate y refresco preventivo) con la que **la cámara se repara
 > sola**. Todo validado en hardware el 2026-11-23, incluidos 4 daños a la vez (prueba 39).
 >
-> **Estado:** protección completa funcionando en la placa de prueba; una cámara real (`2c000c3c140089a17d3`) reparada con el
-> .exe. Pendientes en §11.
+> **Estado:** protección completa funcionando en la placa de prueba, que además sigue emparejada con su monitor; una cámara
+> real (`2c000c3c140089a17d3`) reparada con el .exe. Pendientes en §11.
 
 - Manual de uso del programa para técnicos: **[MANUAL.md](MANUAL.md)**
 - Este README es la referencia técnica y la **bitácora de pruebas**: antes de probar algo, buscar aquí si ya se hizo.
@@ -388,6 +388,7 @@ Log UART (pruebas 24-40): `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
 | 38 | .exe integrado (modo ADB): actualiza afx, escribe el env v4 (con `rw`), `afx init` + `afx check` | 20 s, todo verificado |
 | 39 | **4 daños a la vez** (bit real del kernel + riscv0 + 2 bloques reales de /usr + bloque de rootfs borrado) y reinicio, **sin intervenir** | U-Boot → rescate (kernel desde la copia); afx repara **6 zonas** en ~5 s (1 bit en kernel, riscv0 y usr ×2; rootfs con la paridad; copia del env) y reinicia; arranque normal. MD5 = originales, `afx check` OK |
 | 40 | .exe en modo normal (bootdelay=0) + diagnóstico | "Camara sana y protegida", afx OK; `boot complete` a los ~19 s |
+| 41 | El usuario vuelve a **emparejar la placa con su monitor** (con la protección completa instalada) | **Funciona todo perfecto** (confirmado por el usuario). Re-emparejar cambia `private` de forma legítima: afx debería actualizar su copia y no revertirlo (ver pendiente en §11) |
 
 ---
 
@@ -463,7 +464,12 @@ Desinstalar la protección a mano (dejarla como de fábrica): escribir el env or
   Hoy solo mira `extend_partition`. Si alguna vez se usa OTA en estas cámaras, revisar antes.
 - [ ] Si la app o un "reset de fábrica" borra el overlay (`rootfs_data`), se pierden `S00autofix` y afx: la capa U-Boot
   sigue arrancando con la copia del kernel, pero el rescate no encontraría afx. El diagnóstico del .exe lo muestra.
-- [ ] Confirmar con el monitor que la placa de prueba sigue emparejada después de instalar la protección.
+- [x] Confirmar con el monitor que la placa de prueba sigue emparejada: **sí**, re-emparejada y funcionando (prueba 41).
+- [ ] Al volver a conectar la placa de prueba: comprobar que afx tomó el re-emparejamiento como cambio legítimo.
+  En `/mnt/UDISK/autofix.log` debería aparecer `private distinto de su copia (cambio legitimo)` → `copia actualizada`;
+  `md5sum /dev/mtd1` ya no debería ser el de fábrica (`d68666cd240c8b923f21e007104ab740`) y tiene que coincidir con la copia
+  (`dd if=/dev/mtd7 bs=65536 skip=52 count=1 | md5sum`); `afx check` = todo OK. Si afx lo hubiera revertido, la cámara
+  perdería el emparejamiento al reiniciar.
 - [ ] Reclamar al proveedor de la flash / fábrica (retención de celdas NOR).
 
 ---
