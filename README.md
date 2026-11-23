@@ -62,7 +62,25 @@ Reparar Camara 2026/
 | `vendor/` | Binarios de terceros. Se bajan de: xfel → https://github.com/xboot/xfel/releases (v1.4.0, trae `Drivers/zadig-2.9.exe`); adb → Android SDK Platform-Tools (https://developer.android.com/tools/releases/platform-tools). |
 | `*.exe` | El .exe embebe el firmware y los binarios de terceros. Se genera con `herramienta/build.ps1`. |
 
-Para compilar en otro PC hay que copiar a mano `firmware/v0.1.5_extraido/` y `vendor/` (ver cabecera de `build.ps1`).
+### Compilar el .exe en otro PC
+
+Al clonar el repo **no vienen** el firmware ni los binarios de terceros (están en `.gitignore`), así que hay que
+**copiarlos a mano** desde este PC (o un respaldo) antes de compilar:
+
+1. Clonar el repo.
+2. Copiar a mano estas dos carpetas a la raíz del repo, con la misma estructura:
+   - `firmware/v0.1.5_extraido/` → como mínimo `boot.fex`, `amp_rv0.fex`, `rootfs_nor.fex`, `usr.fex`, `env.fex`
+   - `vendor/` → `xfel-windows-v1.4.0/` (`xfel.exe`, `libusb-1.0.dll`, `Drivers/zadig-2.9.exe`) y
+     `platform-tools/` (`adb.exe`, `AdbWinApi.dll`, `AdbWinUsbApi.dll`). Si no hay copia, se bajan de las páginas
+     oficiales indicadas en la tabla de arriba.
+3. Compilar: `powershell -File herramienta\build.ps1`. Usa el `csc` de .NET Framework 4, que ya viene con Windows,
+   así que no hay que instalar nada. Genera `herramienta\ReparadorV821.exe`.
+
+**Saltos de línea:** el script que se instala en la cámara (`herramienta/linux/S00autofix`) corre en Linux y
+tiene que tener saltos de línea **LF**. Si tuviera CRLF, fallaría en la cámara (`#!/bin/sh\r`). El `.gitattributes`
+lo fija en LF (también los `.sh` y `.py`), así que **funciona aunque el repo se clone en Windows** con
+`core.autocrlf=true`. Si alguna vez se edita ese archivo con un editor de Windows, comprobar que siga en LF
+(`git ls-files --eol herramienta/linux/S00autofix` debe decir `i/lf w/lf`).
 
 ---
 
