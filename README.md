@@ -221,7 +221,7 @@ U-Boot 2018.07-ge71a924. Probado en la consola de la placa de prueba (con `bootd
 | `saveenv` | OK (lo único que U-Boot escribe) |
 | Cambiar el inicio de `boot_normal` | **Rompe** el arranque: `ERROR: attempting read past flash size`, `FDT_ERR_BADMAGIC`, no carga el DTB → Linux se cuelga tras `earlycon` |
 | `bootdelay=2` | Permite entrar a la consola por la UART (con 0 no da tiempo) |
-| Botón de la placa | Es la tecla "ext" de U-Boot (`FEL key detecting ...!` ~3 s) → arranca con **`extflag=2`** (modo test de fábrica, `lindipcam -t`). **No** es el FEL del BROM |
+| Botón de la placa | Lo lee **U-Boot** (no el BROM) en `sunxi_ext_gpio_ctrl`: imprime `FEL key detecting ...!` cada ~50 ms durante ~3 s. **Mantenido apretado** → `Start up with extflag=2` (modo test de fábrica, `lindipcam -t`): visto 3 veces el 2026-11-23, nunca contó pulsaciones. **Varias pulsaciones** → según el usuario entra en el modo USB con el que flashea PhoenixSuit; el binario tiene `FEL key get %d times !` y `FEL mode confirmed !`, así que cuenta pulsaciones. Funciona en las cámaras muertas por esta falla porque U-Boot está sano (solo se daña el kernel). Pendiente: verlo por UART (cuántas pulsaciones hacen falta) y confirmar que xfel funciona en ese modo |
 
 ---
 
@@ -244,7 +244,7 @@ Log completo: `logs/uart/COM15_2026-11-23_pruebas_autofix.log`.
 |---|---|---|
 | 1 | Análisis del firmware: `extend_backup` vacía, comandos de U-Boot por strings | Hay espacio para la copia (cuidado: los strings mienten, ver `setexpr`) |
 | 2 | .exe v1 en seco (xfel falso + simulador) sobre el volcado de placa 2 | Detecta el bit real, repara y protege; `private` intacto |
-| 3 | Entrar en FEL con el botón | **No entra**: U-Boot arranca con `extflag=2` (ver §7) |
+| 3 | Entrar en FEL con el botón **mantenido apretado** | **No entra**: U-Boot arranca con `extflag=2` (ver §7). Lo que funciona son **varias pulsaciones** (dato del usuario, así flashea con PhoenixSuit) |
 | 4 | Cámara encendida por USB | **ADB con root**; particiones `/dev/mtdblockN` escribibles; hay `dd`, `md5sum`, `fw_printenv/fw_setenv` |
 | 5 | Respaldo completo por ADB (`dd` a `/tmp` + `adb pull`; no hay `exec-out`) | OK, MD5 iguales (`volcados/placa_prueba/`) |
 | 6 | Script v1 (con `setexpr`) instalado por ADB | `setexpr` no existe → **falla segura** (no escribe y arranca). Pero cambiar `boot_normal` rompió la carga del DTB → **kernel colgado** |
@@ -283,7 +283,7 @@ Log completo: `logs/uart/COM15_2026-11-23_pruebas_autofix.log`.
 | `adb exec-out` | adbd demasiado viejo: usar `adb shell dd ... of=/tmp/x` + `adb pull` |
 | Rutas `/tmp/...` en Git Bash con adb | MSYS las convierte a rutas de Windows: usar `MSYS_NO_PATHCONV=1` |
 | Login por UART en Linux | Pide usuario y contraseña (desconocidos): no hace falta, hay ADB root |
-| Mantener apretado el botón para FEL | Da `extflag=2` (modo test), no FEL |
+| Mantener apretado el botón para FEL | Da `extflag=2` (modo test), no FEL. Hay que **pulsarlo varias veces** al encender |
 
 ---
 
@@ -293,7 +293,7 @@ Log completo: `logs/uart/COM15_2026-11-23_pruebas_autofix.log`.
 |---|---|
 | Arranca (aunque sea con fallos) | ADB: el .exe en modo ADB, o `adb shell` (root) |
 | Bucle por el kernel, **con la protección instalada** | No hace falta nada: arranca con la copia y Linux repara |
-| Bucle por el kernel **sin protección** | FEL + .exe (o xfel a mano, §4) |
+| Bucle por el kernel **sin protección** | FEL (pulsar el botón **varias veces** al encender) + .exe (o xfel a mano, §4); luego una pasada por ADB para instalar el script. Plan B: PhoenixSuit + .exe por ADB |
 | Bucle en Linux (panic) con `bootdelay=2` y UART | Consola U-Boot (Enter al ver `Hit any key`) → `setenv init /bin/sh` → `run bootcmd` → shell root sin rcS → `dd` desde la copia (`/dev/mtdblock7`) → cortar energía. Montar `/usr` para `md5sum`: `mount -t squashfs -o ro /dev/mtdblock6 /usr` |
 | U-Boot con `bootdelay=0` | No se puede interrumpir: FEL |
 
@@ -313,7 +313,10 @@ Desinstalar la protección a mano (dejarla como de fábrica): escribir el env or
 
 ## 11. Pendientes y limitaciones
 
-- [ ] **Modo FEL del .exe sin probar en hardware** (la placa de prueba no entró en FEL). Falta averiguar cómo entró en FEL la placa 2. Ideas: comando `efex` en la consola de U-Boot; ver con qué protocolo responde a xfel.
+- [ ] **Modo FEL del .exe sin probar en hardware.** Cómo entrar: **pulsar el botón varias veces** durante los ~3 s de `FEL key detecting` (mantenerlo apretado da `extflag=2`). Así entra en el modo en que flashea PhoenixSuit. Falta:
+  (1) verlo por UART (debería salir `FEL key get N times !` → `FEL mode confirmed !`) y anotar cuántas pulsaciones hacen falta;
+  (2) confirmar que **xfel** responde en ese modo (en la placa 2 sí funcionó xfel, así que probablemente es el mismo);
+  (3) correr el .exe en modo FEL sobre una cámara muerta de verdad. Plan B mientras tanto: PhoenixSuit + .exe por ADB.
 - [ ] **Bits en el DTB** (final de `boot`, 0x294000–0x2A3000, ~2 % del kernel): U-Boot carga el DTB desde la partición dañada antes del script → Linux se cuelga. Se repara con el .exe (FEL). Idea: usar `set_working_fdt` / `fdt` con el DTB de la copia.
 - [ ] **rootfs / usr** no se auto-reparan (no caben como copia). El .exe sí los detecta y los repara.
 - [ ] **Mejora barata:** que la capa U-Boot también se desactive con OTA pendiente (`run af_s_${extend_partition}${swu_mode} ...`). Hoy solo mira `extend_partition`. Si alguna vez se usa OTA en estas cámaras, revisar antes.

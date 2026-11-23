@@ -56,15 +56,21 @@ Para comprobar después, se puede pulsar **1. Diagnosticar**: debe decir **"Cama
 Hay que entrar en **modo FEL** (modo de grabación del chip por USB).
 
 1. La primera vez en ese PC, instalar el driver (ver §5).
-2. Poner la cámara en modo FEL y conectarla. Arriba debe decir **"Camara en modo FEL detectada (driver WinUSB) - lista"**.
+2. **Entrar en modo FEL:** conectar la cámara por USB y, apenas enciende (los primeros ~3 s), **presionar el pulsador
+   varias veces seguidas** (pulsar y soltar). **No dejarlo apretado:** mantenido apretado arranca en un modo de
+   prueba de fábrica y no sirve. Arriba debe decir **"Camara en modo FEL detectada (driver WinUSB) - lista"**.
+   Si no aparece, desconectar y repetir.
 3. Pulsar **2. Reparar y proteger**. Corrige el bit dañado, deja la copia de respaldo y el arranque protegido.
    Debe terminar en verde con: **"Reparada por FEL. Falta conectarla encendida (ADB) para terminar la proteccion"**.
 4. Desconectar y dejar que la cámara **arranque normal**.
 5. **Terminar la protección:** con la cámara ya encendida, hacer el §3 (**Reparar y proteger** en modo ADB).
    Por FEL no se puede instalar la parte de Linux de la protección.
 
-> ⚠️ **Cómo entrar en FEL todavía no está claro** en este modelo. Mantener apretado el botón de la placa **no**
-> sirve (arranca en modo de prueba de fábrica). Si consigues entrar, anota cómo en el README.
+> ℹ️ Así se ha conseguido flashear estas cámaras con PhoenixSuit. Con el ReparadorV821 en modo FEL **todavía no se
+> probó en una cámara real**: la primera vez, revisar con calma el resultado (y anotarlo en el README).
+>
+> **Plan B** si el modo FEL del programa no funcionara: flashear con PhoenixSuit (mismo método del pulsador) y
+> después proteger la cámara por ADB (§3). Comprobar luego que sigue emparejada con su monitor.
 
 ---
 
