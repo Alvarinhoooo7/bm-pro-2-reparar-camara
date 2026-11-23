@@ -17,7 +17,8 @@ import os, re, struct, sys, zlib
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FW = os.path.join(REPO, 'firmware', 'v0.1.5_extraido')
 BOOT = open(os.path.join(FW, 'boot.fex'), 'rb').read()
-PART = {'boot': (0x70000, 0x2B0000), 'riscv0': (0x320000, 0x90000), 'extend_backup': (0xB20000, 0x410000)}
+PART = {'boot': (0x70000, 0x2B0000), 'riscv0': (0x320000, 0x90000), 'rootfs': (0x3B0000, 0x360000),
+        'extend': (0x710000, 0x410000), 'extend_backup': (0xB20000, 0x410000)}
 
 
 class Boot(Exception):
@@ -69,12 +70,16 @@ def simular(flash, etiqueta):
         if c in ('itest', 'itest.l'):
             def val(x): return struct.unpack('<I', mrd(int(x[1:], 16), 4))[0] if x.startswith('*') else int(x, 16)
             return 0 if len(a) == 4 and a[2] == '==' and val(a[1]) == val(a[3]) else 1
+        if c == 'saveenv': out.append('saveenv (af_rc=%s)' % env.get('af_rc')); return 0
         if c == 'bootm':
-            raise Boot('ARRANCA' if mrd(0x82000000, len(BOOT)) == BOOT else 'uncompress error -> bucle')
+            if mrd(0x82000000, len(BOOT)) != BOOT: raise Boot('uncompress error -> bucle')
+            ba = env.get('bootargs', '')
+            raise Boot('ARRANCA MODO RESCATE (' + ' '.join(x for x in ba.split() if x.startswith(('root=', 'init=', 'rootfstype'))) + ')'
+                       if 'mtdblock8' in ba else 'ARRANCA')
         out.append(f"Unknown command '{c}'"); return 1
 
     try:
-        lista(env.get('boot_normal', '')); res = 'termino sin bootm'
+        lista(env.get('bootcmd', 'run setargs_nor boot_normal').replace('setargs_nand', 'setargs_nor')); res = 'termino sin bootm'
     except Boot as b:
         res = str(b)
     print(f'{etiqueta:40s} -> {res}')
@@ -100,3 +105,10 @@ if __name__ == '__main__':
     simular(flip(img, 0x16BD14), 'kernel con el bit real perdido')
     simular(flip(flip(img, 0x16BD14), 0xB20000 + 0x1000), 'kernel y copia danados')
     simular(ranura(flip(img, 0x16BD14), 'extendB'), 'kernel danado, ranura OTA extendB')
+    simular(flip(img, 0x3B0000 + 0x70123), 'rootfs con 1 bit perdido')
+    simular(flip(img, 0x710000 + 0x495F2, 0x20), 'usr con el bit real de la camara 89a17d3')
+    simular(flip(flip(img, 0x3B0000 + 0x70123), 0x16BD14), 'rootfs y kernel danados')
+    e = bytearray(img)                                    # contador agotado: no mas rescates
+    body = bytes(e[0x60004:0x70000]).split(b'\0\0')[0] + b'\0af_rc=3\0\0'
+    body = body.ljust(0x10000 - 4, b'\0'); e[0x60000:0x70000] = struct.pack('<I', zlib.crc32(body) & 0xffffffff) + body
+    simular(flip(bytes(e), 0x3B0000 + 0x70123), 'rootfs danado pero ya hubo 3 rescates')

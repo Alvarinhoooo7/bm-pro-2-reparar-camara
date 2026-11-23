@@ -126,6 +126,7 @@ RESULTADO DEL DIAGNOSTICO
   extend_backup  OK (copia de auto-reparacion presente)
   env            OK, auto-reparacion instalada
   script Linux   OK (S00autofix instalado)
+  afx            OK (1 bit + paridad: uboot, private, env, boot, riscv0, rootfs, usr)
 ```
 
 | Línea | Qué significa |
@@ -136,6 +137,7 @@ RESULTADO DEL DIAGNOSTICO
 | `extend_backup` | La copia de respaldo. "vacia" = sin protección; "OK" = presente. |
 | `env` | El arranque protegido. "original, sin auto-reparacion" = sin protección. |
 | `script Linux` | La parte que reescribe la flash sola. "no instalado" = falta (repetir en modo ADB). |
+| `afx` | El programa que corrige bits en **toda** la flash (con paridad y copias). "no instalado" o "de otra versión" = pulsar **Reparar y proteger** en modo ADB. Si encontró daños, los lista debajo. |
 
 Bajo cada parte dañada aparece la dirección exacta del byte, por ejemplo:
 `0x016BD14 (boot+0xFBD14): 0x4B deberia ser 0x0B` (es la falla real de estas cámaras).
@@ -197,13 +199,19 @@ Para dejar la placa de pruebas como una de cliente: desmarcar "Modo prueba" y **
 
 ## 10. Cómo funciona la protección (resumen)
 
-1. Se guarda una **copia** del kernel y de `riscv0` en una zona libre de la flash (`extend_backup`).
-2. En cada arranque, **U-Boot** comprueba el kernel. Si tiene un bit perdido, **arranca con la copia**: la cámara
-   no se queda en bucle.
-3. Al arrancar, **Linux** compara kernel y `riscv0` con la copia y **reescribe en la flash el que esté dañado**
-   (o rehace la copia si la dañada es ella). Queda anotado en `/mnt/UDISK/autofix.log` de la cámara.
+1. Se guarda una **copia** del kernel y de `riscv0`, una **paridad** de `rootfs` y `/usr`, y copias de `private` y del
+   `env`, en una zona libre de la flash (`extend_backup`).
+2. En cada arranque, **U-Boot** comprueba el kernel, `rootfs` y `/usr`:
+   - si el kernel tiene un bit perdido, **arranca con la copia**;
+   - si `rootfs` o `/usr` están dañados, arranca un **modo rescate** en el que el programa **afx** repara la flash con la
+     paridad y reinicia la cámara (tarda unos segundos; se ve como un reinicio extra).
+3. Al arrancar normal, **afx** revisa toda la flash bloque a bloque: si encuentra un bit perdido, sabe exactamente cuál es
+   y lo corrige; si un bloque está muy dañado, lo reconstruye con la paridad o con la copia. Queda anotado en
+   `/mnt/UDISK/autofix.log` de la cámara.
+4. Además, cada 6 horas reescribe un par de bloques con sus mismos datos ("refresco"), para que las celdas de la flash no
+   lleguen a perder carga.
 
-El arranque normal no se hace más lento (~12 s hasta `boot complete`, igual que antes).
+El arranque tarda algo más que de fábrica (~19 s hasta `boot complete` en lugar de ~12 s) por las revisiones.
 
 ---
 
@@ -216,7 +224,11 @@ El arranque normal no se hace más lento (~12 s hasta `boot complete`, igual que
 **¿Y si se corta la luz o el USB a mitad?** Volver a correr **Reparar y proteger**. Lo que se escribe primero
 son los bloques dañados y la copia; el arranque protegido se activa al final.
 
-**¿Qué no cubre?** Un bit perdido en el pequeño DTB del final del kernel (~2 % de esa zona) o en `rootfs`/`usr`:
+**¿Qué no cubre?** Un bit perdido en el pequeño DTB del final del kernel (~2 % de esa zona) o en el propio U-Boot:
 la cámara no se lo arregla sola, pero el programa lo detecta y lo repara (en modo FEL si la cámara no arranca).
+`rootfs` y `/usr` **sí** se reparan solos desde la versión con afx.
+
+**¿Por qué tarda más en arrancar?** U-Boot revisa unos 8 MB y afx toda la flash en cada arranque (~7 s más). Es el precio
+de que la cámara se arregle sola.
 
 **¿Funciona con otra versión de firmware?** No. Detecta que es distinta y no toca nada.

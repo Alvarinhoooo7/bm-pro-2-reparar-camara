@@ -18,6 +18,10 @@
  *
  * Codigos de salida: 0 todo OK / reparado sin reinicio, 1 error, 2 reparado y hace falta reiniciar
  * (se toco rootfs/usr montados), 3 hay danos que no se pudieron reparar, 4 (check) hay danos reparables.
+ *
+ * MODO RESCATE: si U-Boot ve rootfs o usr danados, arranca el kernel con
+ *   root=/dev/mtdblock8 (jffs2 rootfs_data) init=/upper/etc/autofix/afx
+ * afx corre como proceso 1 (no usa nada de rootfs): monta /dev, repara y reinicia.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,6 +34,11 @@
 #define fsync_fd(fd) _commit(fd)
 #else
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/mount.h>
+#include <sys/reboot.h>
+#include <sys/sysmacros.h>
 #define fsync_fd(fd) fsync(fd)
 #endif
 
@@ -60,7 +69,7 @@ static const char *g_img = NULL;           /* modo PC: imagen de 16 MB */
 static const char *g_man = "/etc/autofix/manifest";
 static const char *g_log = "/mnt/UDISK/autofix.log";
 static const char *g_state = "/mnt/UDISK/autofix.state";
-static int g_verbose = 0, g_dry = 0;
+static int g_verbose = 0, g_dry = 0, g_rescue = 0;
 
 /* tabla del manifiesto: crc + md5 de cada bloque protegido */
 typedef struct { uint32_t crc; uint8_t md5[16]; int have; } Ent;
@@ -78,7 +87,7 @@ static void logm(const char *fmt, ...)
             strftime(ts, sizeof ts, "%Y-%m-%d %H:%M:%S", tm);
             fprintf(f, "%s afx %s\n", ts, buf); fclose(f);
         }
-        FILE *c = fopen("/dev/console", "w");
+        FILE *c = g_rescue ? NULL : fopen("/dev/console", "w");   /* en rescate stdout ya es la consola */
         if (c) { fprintf(c, "[autofix] %s\n", buf); fclose(c); }
     }
 }
@@ -480,9 +489,46 @@ static int cmd_refresh(int n)
     return 0;
 }
 
+#ifndef _WIN32
+/* afx como proceso 1 (modo rescate). Nunca debe terminar: si init sale, el kernel entra en panic. */
+static int rescue_main(void)
+{
+    /* el kernel monta la raiz en solo lectura si no hay "rw" en los bootargs (probado):
+       remontar en escritura para poder crear /dev y guardar el registro */
+    mount("/dev/root", "/", "jffs2", MS_REMOUNT, NULL);
+    mkdir("/dev", 0755);
+    mount("devtmpfs", "/dev", "devtmpfs", 0, NULL);          /* /dev/mtdN, /dev/console */
+    struct stat st;
+    if (stat("/dev/mtd0", &st) != 0) {                        /* sin devtmpfs: crear los nodos a mano */
+        char p[32];
+        for (int n = 0; n < 10; n++) {
+            snprintf(p, sizeof p, "/dev/mtd%d", n);      mknod(p, S_IFCHR | 0600, makedev(90, 2 * n));
+            snprintf(p, sizeof p, "/dev/mtdblock%d", n); mknod(p, S_IFBLK | 0600, makedev(31, n));
+        }
+        mknod("/dev/console", S_IFCHR | 0600, makedev(5, 1));
+    }
+    int fd = open("/dev/console", O_RDWR);
+    if (fd >= 0) { dup2(fd, 0); dup2(fd, 1); dup2(fd, 2); if (fd > 2) close(fd); }
+    g_rescue = 1;                                            /* stdout ya es la consola: no duplicar */
+    g_man = "/upper/etc/autofix/manifest";                   /* rootfs_data montado como / */
+    g_log = "/upper/etc/autofix/rescue.log";                 /* en marcha normal: /etc/autofix/rescue.log */
+    logm("MODO RESCATE: U-Boot vio rootfs/usr danados; reparando con afx");
+    int rc = cmd_check(1);
+    logm("modo rescate terminado (rc=%d): reiniciando", rc);
+    sync();
+    sleep(1);
+    reboot(RB_AUTOBOOT);
+    for (;;) pause();
+    return 0;
+}
+#endif
+
 int main(int argc, char **argv)
 {
     crc_init();
+#ifndef _WIN32
+    if (getpid() == 1) return rescue_main();
+#endif
     int i = 1;
     for (; i < argc && argv[i][0] == '-'; i++) {
         if (!strcmp(argv[i], "-img") && i + 1 < argc) g_img = argv[++i];

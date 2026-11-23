@@ -4,6 +4,7 @@
 #   firmware\v0.1.5_extraido\   boot.fex amp_rv0.fex rootfs_nor.fex usr.fex env.fex
 #   vendor\xfel-windows-v1.4.0\ xfel.exe libusb-1.0.dll Drivers\zadig-2.9.exe
 #   vendor\platform-tools\      adb.exe AdbWinApi.dll AdbWinUsbApi.dll
+#   herramienta\afx\afx         compilado con zig (ver README, seccion afx)
 param([string]$Out = "ReparadorV821.exe")
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -25,7 +26,8 @@ $res = @(
   "$pt\adb.exe,adb.exe",
   "$pt\AdbWinApi.dll,AdbWinApi.dll",
   "$pt\AdbWinUsbApi.dll,AdbWinUsbApi.dll",
-  "$here\linux\S00autofix,S00autofix"
+  "$here\linux\S00autofix,S00autofix",
+  "$here\afx\afx,afx"
 ) | ForEach-Object { "/resource:$_" }
 
 & $csc /nologo /target:winexe /optimize+ /platform:anycpu "/out:$here\$Out" `

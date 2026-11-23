@@ -1,5 +1,5 @@
 #!/bin/sh
-# autofix v5 - camaras V821 firmware v0.1.5 (usa /etc/autofix/afx si esta instalado)
+# autofix v6 - camaras V821 firmware v0.1.5 (usa /etc/autofix/afx si esta instalado; modo rescate)
 # Capa Linux de la auto-reparacion (U-Boot no puede escribir la flash):
 #  - riscv0: se revisa ANTES de que S00mpp lo cargue (un bit perdido ahi = kernel panic en bucle)
 #  - kernel (boot): U-Boot ya arranco con la copia si estaba danado; aqui se reescribe la flash
@@ -69,6 +69,18 @@ MAN=/etc/autofix/manifest
 BOOTS=/mnt/UDISK/autofix.reboots     # reinicios seguidos provocados por afx (freno anti-bucle)
 
 allowed || exit 0
+
+# v6: si venimos del modo rescate (U-Boot vio rootfs/usr danados y arranco afx como init),
+# pasar su registro al log principal y borrar el contador de intentos de U-Boot.
+prev=$(fw_printenv -n af_rc 2>/dev/null)
+if [ -n "$prev" ]; then
+    log "arranque normal despues del modo rescate ($prev intento/s)"
+    if [ -f /etc/autofix/rescue.log ]; then
+        cat /etc/autofix/rescue.log >> $LOG
+        rm -f /etc/autofix/rescue.log
+    fi
+    fw_setenv af_rc
+fi
 
 if [ -x $AFX ] && [ -f $MAN ]; then
     # v5: afx revisa TODO (uboot, private, env, boot, riscv0, rootfs, usr, copias y paridad),

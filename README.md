@@ -139,9 +139,12 @@ Linux: `/init` monta el overlay → `rcS` → `rc.final` ejecuta `/etc/init.d/S?
 
 | Modo | Dónde | Síntoma | ¿Se repara sola con la protección? | ¿La repara el .exe? |
 |---|---|---|---|---|
-| 1 | kernel (`boot`) | bucle a ~1 s, `uncompress error` (sin Linux, sin ADB) | **Sí** | Sí (FEL) |
-| 2 | `riscv0` | kernel panic a ~3 s, `Load mpp modules` | **Sí** | Sí |
-| 3 | `/usr` (`extend`) o `rootfs` | arranca, errores SQUASHFS, reinicio por watchdog a ~20 s (ADB unos 15 s) | No | **Sí (ADB, en la ventana)** |
+| 1 | kernel (`boot`) | bucle a ~1 s, `uncompress error` (sin Linux, sin ADB) | **Sí** (U-Boot arranca con la copia, afx reescribe) | Sí (FEL) |
+| 2 | `riscv0` | kernel panic a ~3 s, `Load mpp modules` | **Sí** (afx antes de `S00mpp`) | Sí |
+| 3 | `/usr` (`extend`) o `rootfs` | arranca, errores SQUASHFS, reinicio por watchdog a ~20 s (ADB unos 15 s); si cae en `/init` o busybox: panic a ~1,3 s | **Sí** (U-Boot lo ve por CRC → modo rescate → afx con paridad) | Sí (ADB en la ventana, o FEL) |
+
+Con la protección completa (env v4 + S00autofix v6 + afx) **los tres modos se reparan solos**: validado en hardware con los
+tres a la vez (prueba 39).
 
 ---
 
@@ -159,14 +162,30 @@ Linux: `/init` monta el overlay → `rcS` → `rc.final` ejecuta `/etc/init.d/S?
 
 ## 5. Auto-reparación: diseño final
 
-Dos capas, porque **U-Boot no puede escribir la flash** en este firmware (ver §7).
+Tres capas, porque **U-Boot no puede escribir la flash** en este firmware (ver §7): U-Boot **detecta** y arranca algo que
+funcione; Linux/afx **reparan**.
 
-### Capa 1 — U-Boot (env, `autofix_ver=3`)
+### Capa 1 — U-Boot (env, `autofix_ver=4`)
 
-En cada arranque verifica el CRC32 del kernel. Si está mal y la copia está bien, **arranca con la copia cargada en RAM**:
+En cada arranque verifica el CRC32 de **rootfs, usr y kernel**:
+- **kernel** dañado y copia sana → **arranca con la copia cargada en RAM**;
+- **rootfs o usr** dañados → **modo rescate**: arranca el kernel con `root=/dev/mtdblock8 rootfstype=jffs2 rw`
+  (`rootfs_data`, donde vive afx) e `init=/upper/etc/autofix/afx`. afx corre como proceso 1 (estático: no necesita nada
+  de rootfs), crea `/dev`, repara todo con la paridad y las copias, y reinicia. Freno: `af_rc` cuenta los intentos con
+  `saveenv` (máximo 3; `S00autofix` lo borra al arrancar normal).
 
 ```
-boot_normal  = sunxi_flash read 82000000 ${boot_partition};run af_k;bootm 82000000
+boot_normal  = sunxi_flash read 82000000 ${boot_partition};run af_r;run af_k;bootm 82000000
+af_r         = setenv af_bad;run af_s_${extend_partition} af_rr af_ru;run af_resc_${af_bad}
+af_rr        = sunxi_flash read 82000000 rootfs 2E0000;crc32 82000000 2E0000 81F00000;setenv af_x setenv af_bad 1;run af_rrchk af_xok;run af_x
+af_rrchk     = itest.l *81F00000 == dff95cd2
+af_ru        = sunxi_flash read 82000000 extend 280000;crc32 82000000 280000 81F00000;setenv af_x setenv af_bad 1;run af_ruchk af_xok;run af_x
+af_ruchk     = itest.l *81F00000 == bb034641
+af_xok       = setenv af_x itest 1 == 1
+af_resc_     = itest 1 == 1
+af_resc_1    = echo [autofix] ROOTFS/USR DANADO;run af_cnt_${af_rc} af_rgo
+af_cnt_      = setenv af_rc 1;saveenv          (af_cnt_1 -> 2, af_cnt_2 -> 3; af_cnt_3 no existe = basta)
+af_rgo       = echo [autofix] MODO RESCATE: afx repara con la paridad;setenv nor_root /dev/mtdblock8;setenv init /upper/etc/autofix/afx rootfstype=jffs2 rw;run setargs_nor
 af_k         = sunxi_flash read 82000000 boot 2A3000;crc32 82000000 2A3000 81F00000;setenv af_kx run af_kfix;run af_kchk af_kok;run af_kx
 af_kchk      = itest.l *81F00000 == 75ca6eb5
 af_kok       = setenv af_kx echo [autofix] kernel OK
@@ -179,15 +198,22 @@ boot_normal_orig = (el boot_normal original, guardado)
 
 - "si/si no" sin `if`: se carga un valor por defecto (`setenv X ...`) y `run cond accion` lo cambia solo si `cond` sale bien.
 - `boot_normal` **tiene que empezar igual que el original**: U-Boot lo lee al arrancar para cargar el DTB del kernel.
-- La copia solo se usa con la ranura OTA `extendA` (`af_s_${extend_partition}` no existe para `extendB`).
-- **Si algo no cuadra, nunca escribe nada y arranca igual que el original** (falla segura, comprobada en hardware).
+- La copia y el rescate solo se usan con la ranura OTA `extendA` (`af_s_${extend_partition}` no existe para `extendB`).
+- **Si algo no cuadra, nunca escribe la flash y arranca igual que el original** (falla segura, comprobada en hardware).
+  Lo único que escribe es el `env` (`saveenv` del contador de rescates).
+- **`rw` es imprescindible** en el arranque de rescate: sin él, el kernel monta la raíz en solo lectura, afx no puede crear
+  `/dev` y no ve la flash (prueba 35). afx además remonta en escritura y crea los nodos `/dev/mtdN` con `mknod` si hace falta.
+- Costo: el arranque normal pasa de ~12 s a ~19 s (U-Boot lee y verifica ~8 MB, y afx revisa toda la flash al arrancar).
 
-### Capa 2 — Linux (`/etc/init.d/S00autofix`)
+### Capa 2 — Linux (`/etc/init.d/S00autofix`, v6)
 
 Está en `herramienta/linux/S00autofix` y se instala en el overlay persistente (`rootfs_data`):
 
-- Corre **antes que `S00mpp`**: revisa `riscv0` contra su copia y lo repara **antes de que se cargue** (si no, kernel panic).
-- En segundo plano (15 s después) compara el kernel con el MD5 de referencia y reescribe la flash desde la copia. Si la dañada es la copia, la rehace desde el original.
+- Corre **antes que `S00mpp`** (orden alfabético). Si afx está instalado, ejecuta `afx repair` (capa 3) y reinicia si reparó
+  rootfs/usr (freno: 3 reinicios seguidos); deja corriendo el refresco cada 6 h. Si venía del modo rescate, pasa
+  `/etc/autofix/rescue.log` al registro y borra `af_rc`.
+- Sin afx (instalaciones viejas) hace lo de la v4: revisa `riscv0` contra su copia y lo repara **antes de que se cargue**;
+  en segundo plano (15 s después) compara el kernel con el MD5 de referencia y reescribe la flash desde la copia.
 - Guardas: solo actúa si `extend_partition=extendA`, si no hay `swu_mode` (OTA) y si la copia empieza por `ANDROID!` (es nuestra y no una OTA).
 - Registro en `/mnt/UDISK/autofix.log` y en la consola (`[autofix] ...`).
 
@@ -209,8 +235,8 @@ bloque de 64 KB, generado con `afx init` cuando la flash está verificada contra
 - **Refresco preventivo:** reescribe 2 bloques cada 6 h con sus mismos datos (toda la flash en ~26 días) para recargar las
   celdas antes de que pierdan un bit. Un corte de luz a mitad de un refresco deja un bloque borrado, y la paridad lo rehace.
 - Si reparó `rootfs` o `/usr` (montados), `S00autofix` reinicia (freno: máximo 3 reinicios seguidos).
-- **Límite actual:** si el daño impide arrancar Linux (por ejemplo, en `/init`), afx no llega a correr (prueba 30): hay que usar
-  FEL hasta que exista el **modo rescate** (§11).
+- Si el daño impide arrancar Linux (por ejemplo, en `/init`), afx no llegaría a correr desde `S00autofix` (prueba 30): para eso
+  está el **modo rescate** de la capa 1, que arranca afx directamente como proceso 1 (pruebas 34-39).
 - Códigos de salida: 0 OK, 1 error, 2 reparado y hace falta reiniciar, 3 daños no reparables, 4 (`check`) daños reparables.
 - Pruebas en el PC: `python pruebas/test_afx.py` (20 casos sobre la imagen real, incluido el caso de la cámara 89a17d3).
 - Compilar: `vendor\zig\zig.exe cc -target riscv32-linux-musl -static -O2 -s -o herramienta\afx\afx herramienta\afx\afx.c`
@@ -317,7 +343,7 @@ Volcado de la `extend` dañada: `volcados/camara_89a17d3/extend.bin` (MD5 `5050a
 
 ### 2026-11-23 — afx (corrección de 1 bit + paridad) y modo FEL en hardware (placa de prueba)
 
-Log UART: `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
+Log UART (pruebas 24-40): `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
 
 | # | Prueba | Resultado |
 |---|---|---|
@@ -331,6 +357,18 @@ Log UART: `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
 | 31 | Rescate con `bootdelay=0` mandando Enter sin parar por la UART | No interrumpe U-Boot |
 | 32 | **FEL con 5 pulsaciones** (USB conectado) + Zadig (WinUSB) + xfel | `FEL mode confirmed` → xfel: `AWUSBFEX ID=0x00188200(V821)`. Sin el USB conectado se reinicia y arranca normal |
 | 33 | .exe en **modo FEL**: diagnóstico + reparación de los 4 daños (con el nuevo criterio por bloques) | 4 zonas detectadas, **5 bloques reescritos en 31 s**; arranca: `kernel OK`, `boot complete` 12,9 s, MD5 de kernel/riscv0/rootfs/usr = originales, `afx check` todo OK |
+
+### 2026-11-23 — Modo rescate e integración de afx en el .exe (placa de prueba)
+
+| # | Prueba | Resultado |
+|---|---|---|
+| 34 | env v4 (CRC de rootfs/usr en U-Boot) en el simulador y en la placa, arranque sano | U-Boot calcula `dff95cd2` (rootfs), `bb034641` (usr), `75ca6eb5` (kernel); `kernel OK`; arranca normal |
+| 35 | Borrar el bloque 7 de rootfs (`/init`) → reinicio (primera versión, sin `rw`) | U-Boot: `ROOTFS/USR DANADO` → `saveenv` → **modo rescate**; el kernel monta la jffs2 y **arranca afx como proceso 1**, pero afx no ve la flash (`ERROR leyendo boot 0`): raíz en solo lectura → sin `/dev`. Freno: tras 3 intentos (`af_cnt_3 not defined`) deja de intentar |
+| 36 | Rescate con `init=/bin/sh` | Falla: `/bin/sh` también estaba en el bloque borrado (`error -5`) |
+| 37 | Rescate manual desde la consola de U-Boot agregando `rw` | afx: **`rootfs bloque 7 -> reconstruido con la paridad`**, reinicia; arranque normal, `S00autofix` v6 anota el rescate y borra `af_rc` |
+| 38 | .exe integrado (modo ADB): actualiza afx, escribe el env v4 (con `rw`), `afx init` + `afx check` | 20 s, todo verificado |
+| 39 | **4 daños a la vez** (bit real del kernel + riscv0 + 2 bloques reales de /usr + bloque de rootfs borrado) y reinicio, **sin intervenir** | U-Boot → rescate (kernel desde la copia); afx repara **6 zonas** en ~5 s (1 bit en kernel, riscv0 y usr ×2; rootfs con la paridad; copia del env) y reinicia; arranque normal. MD5 = originales, `afx check` OK |
+| 40 | .exe en modo normal (bootdelay=0) + diagnóstico | "Camara sana y protegida", afx OK; `boot complete` a los ~19 s |
 
 ---
 
@@ -350,6 +388,11 @@ Log UART: `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
 | `boot_normal = run ...;bootm` (sin el `sunxi_flash read ... ${boot_partition}` al inicio) | U-Boot no encuentra el DTB → Linux colgado |
 | Verificar riscv0 en U-Boot | Inútil: riscv0 lo carga Linux desde la flash (se quitó del script) |
 | Script Linux como `S99*` | Corre después de `S00mpp`: un riscv0 dañado ya provocó el panic |
+| Arranque de rescate sin `rw` en los bootargs | La raíz jffs2 queda en solo lectura: afx no puede crear `/dev` ni ver la flash (prueba 35) |
+| `init=/bin/sh` con `rootfs` dañado | `/bin/sh` (busybox) puede estar en el bloque dañado: `Requested init /bin/sh failed (error -5)` |
+| Verificar escrituras releyendo `/dev/mtdblockN` | Puede devolver lo que `mtdblock` tiene en RAM: verificar con `/dev/mtdN` (crudo) |
+| Escribir con `dd` + `sync` en una partición montada | El último bloque puede quedar en RAM: usar `dd ... conv=fsync` |
+| Probar el .exe "en seco" con la cámara conectada por USB | El .exe elige ADB primero y escribe en la cámara real: para el xfel falso, desconectar la cámara o pasar `--adb` a un ejecutable que no sea adb |
 | `adb exec-out` | adbd demasiado viejo: usar `adb shell dd ... of=/tmp/x` + `adb pull` |
 | Rutas `/tmp/...` en Git Bash con adb | MSYS las convierte a rutas de Windows: usar `MSYS_NO_PATHCONV=1` |
 | Login por UART en Linux | Pide usuario y contraseña (desconocidos): no hace falta, hay ADB root |
@@ -362,8 +405,9 @@ Log UART: `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
 | Situación | Cómo |
 |---|---|
 | Arranca (aunque sea con fallos) | ADB: el .exe en modo ADB, o `adb shell` (root) |
-| Bucle por el kernel, **con la protección instalada** | No hace falta nada: arranca con la copia y Linux repara |
-| Bucle por el kernel **sin protección** | FEL (pulsar el botón **varias veces** al encender) + .exe (o xfel a mano, §4); luego una pasada por ADB para instalar el script. Plan B: PhoenixSuit + .exe por ADB |
+| Cualquier bit perdido, **con la protección completa** (env v4 + S00autofix v6 + afx) | No hace falta nada: se repara sola (kernel desde la copia, rootfs/usr por modo rescate, el resto en Linux) |
+| Bucle por el kernel **sin protección** | FEL (pulsar el botón **5 veces** al encender, con el USB conectado) + .exe (o xfel a mano, §4); luego una pasada por ADB para instalar el resto. Plan B: PhoenixSuit + .exe por ADB |
+| Rescate a mano desde la consola de U-Boot (`bootdelay=2`) | `setenv nor_root /dev/mtdblock8` → `setenv init /upper/etc/autofix/afx rootfstype=jffs2 rw` → `run setargs_nor` → `run af_k` → `bootm 82000000` |
 | Bucle en Linux (panic) con `bootdelay=2` y UART | Consola U-Boot (Enter al ver `Hit any key`) → `setenv init /bin/sh` → `run bootcmd` → shell root sin rcS → `dd` desde la copia (`/dev/mtdblock7`) → cortar energía. Montar `/usr` para `md5sum`: `mount -t squashfs -o ro /dev/mtdblock6 /usr` |
 | U-Boot con `bootdelay=0` | No se puede interrumpir (probado: mandar Enter sin parar por la UART no lo detiene): FEL con 5 pulsaciones |
 
@@ -383,22 +427,23 @@ Desinstalar la protección a mano (dejarla como de fábrica): escribir el env or
 
 ## 11. Pendientes y limitaciones
 
-- [x] ~~**Modo FEL del .exe sin probar en hardware.**~~ **Validado el 2026-11-23** (pruebas 32-33): 5 pulsaciones con el USB conectado.
-- [ ] **Bits en el DTB** (final de `boot`, 0x294000–0x2A3000, ~2 % del kernel): U-Boot carga el DTB desde la partición dañada antes del script → Linux se cuelga. Se repara con el .exe (FEL). Idea: usar `set_working_fdt` / `fdt` con el DTB de la copia.
-- [ ] **Modo rescate (siguiente paso).** Si el bit perdido cae en algo que Linux necesita para arrancar (`/init`, busybox,
-  librerías de rootfs), Linux no arranca y la capa Linux no corre (prueba 30). Plan: que **U-Boot** revise también el CRC de
-  `rootfs` y `/usr` (~0,3 s) y, si están dañados, arranque el kernel con `root=/dev/mtdblock8` (jffs2 `rootfs_data`, donde vive
-  afx) e `init=/upper/etc/autofix/afx`: afx como PID 1 (estático, no necesita rootfs) repara con la paridad y reinicia.
-- [ ] Integrar afx en el .exe (instalar `/etc/autofix/afx`, `afx init`, mostrar `afx check` en el diagnóstico) y escribir en
-  ADB con `dd conv=fsync` + verificación por `/dev/mtdN` (prueba 28).
-- [x] **rootfs / usr**: ahora los cubre **afx** (corrección de 1 bit por CRC + paridad XOR, §5). Falta el modo rescate para cuando el daño impide arrancar Linux (arriba).
-  Idea: **paridad XOR por grupos de bloques** en el espacio libre (quedan 0xD0000 en `extend_backup` tras la copia y
-  0x190000 al final de `extend`) + tabla de MD5 por bloque de 64 KB: el bloque dañado se identifica por su MD5 y se
-  reconstruye con la paridad XOR del resto del grupo. BusyBox no puede hacer XOR binario en shell → necesita un pequeño
-  binario compilado para la cámara (RISC-V rv32, glibc del firmware) o un helper en el kernel. Alternativa más simple:
-  corrección de 1 bit por bloque con CRC por bloque (también necesita binario).
-- [ ] **Mejora barata:** que la capa U-Boot también se desactive con OTA pendiente (`run af_s_${extend_partition}${swu_mode} ...`). Hoy solo mira `extend_partition`. Si alguna vez se usa OTA en estas cámaras, revisar antes.
-- [ ] Si la app o un "reset de fábrica" borra el overlay (`rootfs_data`), se pierde `S00autofix`: la capa U-Boot sigue funcionando, pero ya no se repara la flash ni se protege riscv0. El diagnóstico del .exe lo muestra ("script Linux no instalado").
+- [x] **Modo FEL del .exe**: validado el 2026-11-23 (pruebas 32-33): 5 pulsaciones con el USB conectado.
+- [x] **rootfs / usr**: los cubre **afx** (1 bit por CRC + paridad XOR, §5), también cuando el daño impide arrancar Linux,
+  gracias al **modo rescate** (pruebas 34-39).
+- [x] **Integración de afx en el .exe** (instala, `afx init`, `afx check` en el diagnóstico) y escritura ADB segura
+  (`dd conv=fsync` + verificación por `/dev/mtdN`) (prueba 38).
+- [ ] **Tiempo de arranque**: pasó de ~12 s a ~19 s. Idea: como U-Boot ya garantiza kernel, rootfs y usr sanos al arrancar,
+  `S00autofix` podría revisar en primer plano solo `riscv0` (lo único que se carga antes de la app) y dejar el resto de
+  `afx repair` en segundo plano.
+- [ ] **Bits en el DTB** (final de `boot`, 0x294000–0x2A3000, ~2 % del kernel): U-Boot carga el DTB desde la partición
+  dañada antes del script → Linux se cuelga. Se repara con el .exe (FEL). Idea: usar `set_working_fdt` / `fdt` con el DTB
+  de la copia.
+- [ ] **uboot (boot0/U-Boot)**: afx corrige 1 bit, pero si el daño impide arrancar U-Boot no hay nada que lo detecte:
+  sin U-Boot no hay pulsaciones para FEL. Habría que ver si el BROM entra solo en FEL cuando boot0 es inválido.
+- [ ] **Mejora barata:** que la capa U-Boot también se desactive con OTA pendiente (`run af_s_${extend_partition}${swu_mode} ...`).
+  Hoy solo mira `extend_partition`. Si alguna vez se usa OTA en estas cámaras, revisar antes.
+- [ ] Si la app o un "reset de fábrica" borra el overlay (`rootfs_data`), se pierden `S00autofix` y afx: la capa U-Boot
+  sigue arrancando con la copia del kernel, pero el rescate no encontraría afx. El diagnóstico del .exe lo muestra.
 - [ ] Confirmar con el monitor que la placa de prueba sigue emparejada después de instalar la protección.
 - [ ] Reclamar al proveedor de la flash / fábrica (retención de celdas NOR).
 

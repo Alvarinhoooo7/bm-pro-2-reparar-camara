@@ -138,12 +138,31 @@ namespace ReparadorV821
             //  - boot_normal DEBE empezar con "sunxi_flash read 82000000 ${boot_partition}":
             //    U-Boot lo lee al arrancar para cargar el DTB del kernel.
             //  - sunxi_flash write NO funciona en este U-Boot (solo muestra la ayuda): U-Boot solo
-            //    arranca con la copia; la flash la repara Linux (/etc/init.d/S99autofix).
+            //    arranca con la copia; la flash la repara Linux (/etc/init.d/S00autofix + afx).
             //  - todas las lecturas a 0x82000000 (U-Boot rechaza cargas en otras zonas).
-            //  - riscv0 lo carga Linux desde la flash: lo revisa/repara S99autofix, no U-Boot.
-            add("autofix_ver", "3");
+            //  - riscv0 lo carga Linux desde la flash: lo revisa/repara S00autofix/afx, no U-Boot.
+            //  - v4: tambien revisa el CRC de rootfs y usr; si estan danados arranca el MODO RESCATE:
+            //    root=/dev/mtdblock8 (jffs2 rootfs_data) init=/upper/etc/autofix/afx -> afx como proceso 1
+            //    repara con la paridad y reinicia. Freno: af_rc cuenta intentos (saveenv), maximo 3;
+            //    S00autofix lo borra al arrancar normal.
+            uint rfc = Crc32.Compute(Rootfs, 0, Rootfs.Length);
+            uint usc = Crc32.Compute(Usr, 0, Usr.Length);
+            add("autofix_ver", "4");
             add("bootdelay", testMode ? "2" : "0");
-            add("boot_normal", "sunxi_flash read 82000000 ${boot_partition};run af_k;bootm 82000000");
+            add("boot_normal", "sunxi_flash read 82000000 ${boot_partition};run af_r;run af_k;bootm 82000000");
+
+            add("af_r", "setenv af_bad;run af_s_${extend_partition} af_rr af_ru;run af_resc_${af_bad}");
+            add("af_rr", "sunxi_flash read 82000000 rootfs " + Rootfs.Length.ToString("X") + ";crc32 82000000 " + Rootfs.Length.ToString("X") + " 81F00000;setenv af_x setenv af_bad 1;run af_rrchk af_xok;run af_x");
+            add("af_rrchk", "itest.l *81F00000 == " + rfc.ToString("x8"));
+            add("af_ru", "sunxi_flash read 82000000 extend " + Usr.Length.ToString("X") + ";crc32 82000000 " + Usr.Length.ToString("X") + " 81F00000;setenv af_x setenv af_bad 1;run af_ruchk af_xok;run af_x");
+            add("af_ruchk", "itest.l *81F00000 == " + usc.ToString("x8"));
+            add("af_xok", "setenv af_x itest 1 == 1");
+            add("af_resc_", "itest 1 == 1");                 /* rootfs y usr sanos: nada */
+            add("af_resc_1", "echo [autofix] ROOTFS/USR DANADO;run af_cnt_${af_rc} af_rgo");
+            add("af_cnt_", "setenv af_rc 1;saveenv");
+            add("af_cnt_1", "setenv af_rc 2;saveenv");
+            add("af_cnt_2", "setenv af_rc 3;saveenv");
+            add("af_rgo", "echo [autofix] MODO RESCATE: afx repara con la paridad;setenv nor_root /dev/mtdblock8;setenv init /upper/etc/autofix/afx rootfstype=jffs2 rw;run setargs_nor");
 
             add("af_k", "sunxi_flash read 82000000 boot 2A3000;crc32 82000000 2A3000 81F00000;setenv af_kx run af_kfix;run af_kchk af_kok;run af_kx");
             add("af_kchk", "itest.l *81F00000 == " + kc.ToString("x8"));
@@ -352,7 +371,9 @@ namespace ReparadorV821
         {
             uint n, skip, count; Map(addr, len, out n, out skip, out count);
             if (File.Exists(file)) File.Delete(file);
-            Shell(string.Format("dd if=/dev/mtdblock{0} of=/tmp/af_r.bin bs=65536 skip={1} count={2} 2>/dev/null; sync", n, skip, count), 120000);
+            // /dev/mtdN (crudo): lee la flash de verdad. /dev/mtdblockN puede devolver lo que mtdblock
+            // tiene en RAM (ultimo bloque escrito de una particion montada), no lo que hay en la flash.
+            Shell(string.Format("dd if=/dev/mtd{0} of=/tmp/af_r.bin bs=65536 skip={1} count={2} 2>/dev/null; sync", n, skip, count), 120000);
             string o;
             bool ok = Run("pull /tmp/af_r.bin \"" + file + "\"", 120000, out o);
             Shell("rm -f /tmp/af_r.bin", 20000);
@@ -368,7 +389,34 @@ namespace ReparadorV821
             string o;
             if (!Run("push \"" + file + "\" /tmp/af_w.bin", 120000, out o))
                 throw new Exception(string.Format("Fallo el envio por ADB para 0x{0:X}: {1}", addr, o));
-            Shell(string.Format("dd if=/tmp/af_w.bin of=/dev/mtdblock{0} bs=65536 seek={1} count={2} 2>/dev/null; sync; rm -f /tmp/af_w.bin; echo 3 > /proc/sys/vm/drop_caches", n, skip, count), 180000);
+            // conv=fsync: obliga a bajar el bloque a la flash (con "sync" solo, mtdblock puede dejar en RAM
+            // el ultimo bloque de una particion montada; probado 2026-11-23). La verificacion relee en crudo.
+            Shell(string.Format("dd if=/tmp/af_w.bin of=/dev/mtdblock{0} bs=65536 seek={1} count={2} conv=fsync 2>/dev/null; sync; rm -f /tmp/af_w.bin; echo 3 > /proc/sys/vm/drop_caches", n, skip, count), 180000);
+        }
+
+        // afx (/etc/autofix/afx + manifest): correccion de 1 bit + paridad para toda la flash fija
+        public string AfxMd5()
+        {
+            Match m = Regex.Match(Shell("md5sum /etc/autofix/afx 2>/dev/null", 20000), "^([0-9a-f]{32})");
+            return m.Success ? m.Groups[1].Value : null;
+        }
+
+        // ejecuta "afx <args>"; devuelve el codigo de salida (o -1) y las lineas que imprimio
+        public int Afx(string args, int timeoutMs, out string output)
+        {
+            output = Shell("/etc/autofix/afx " + args + " 2>&1; echo afx_rc=$?", timeoutMs);
+            Match m = Regex.Match(output, "afx_rc=(\\d+)");
+            output = Regex.Replace(output, "afx_rc=\\d+\\s*$", "").Trim();
+            return m.Success ? int.Parse(m.Groups[1].Value) : -1;
+        }
+
+        public bool InstallAfx(byte[] bin, string file, string wantMd5, out string o)
+        {
+            File.WriteAllBytes(file, bin);
+            if (!Run("push \"" + file + "\" /tmp/af_x", 60000, out o)) return false;
+            Shell("mkdir -p /etc/autofix; cp /tmp/af_x /etc/autofix/afx; chmod 755 /etc/autofix/afx; rm -f /tmp/af_x; sync", 30000);
+            o = AfxMd5();
+            return o == wantMd5;
         }
 
         // script de Linux (/etc/init.d/S00autofix, en el overlay persistente)
@@ -508,6 +556,8 @@ namespace ReparadorV821
         IFlash io;                // transporte de la operacion en curso (ADB o FEL)
         byte[] script;            // /etc/init.d/S00autofix
         string scriptMd5;
+        byte[] afxBin;            // /etc/autofix/afx (binario RISC-V estatico)
+        string afxMd5;
         volatile bool busy;
 
         static string Md5(byte[] d)
@@ -594,6 +644,8 @@ namespace ReparadorV821
                 adbIo = new AdbFlash { Exe = Program.Arg("--adb") ?? Path.Combine(binDir, "adb.exe") };
                 script = Res.Bytes("S00autofix");
                 scriptMd5 = Md5(script);
+                afxBin = Res.Bytes("afx");
+                afxMd5 = Md5(afxBin);
                 outRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ReparadorCamarasV821");
                 Fw.Load();
                 xfel = new Xfel { Exe = Program.Arg("--xfel") ?? Path.Combine(binDir, "xfel.exe"), Log = Log };
@@ -785,6 +837,26 @@ namespace ReparadorV821
 
             if (simulate != 0) { Simulate(simulate); return; }
 
+            // ---- afx (solo ADB): si ya esta instalado, primero que repare lo suyo (private y env con sus
+            // copias, 1 bit / paridad). Asi lo que se lee y compara abajo ya parte de lo reparado.
+            string afxNow = null, afxCheckOut = ""; int afxRc = -1;
+            if (io == adbIo)
+            {
+                afxNow = adbIo.AfxMd5();
+                if (afxNow != null)
+                {
+                    string ao;
+                    if (write)
+                    {
+                        Status("afx: reparando con copias y paridad...", 3);
+                        int r0 = adbIo.Afx("repair", 180000, out ao);
+                        if (ao.Length > 0) foreach (string line in ao.Split('\n')) Log("  " + line.Trim());
+                        if (r0 == 2) Log("  (afx reparo rootfs/usr: conviene reiniciar la camara al terminar)");
+                    }
+                    afxRc = adbIo.Afx("check", 180000, out afxCheckOut);
+                }
+            }
+
             // ---- lectura
             Status("Leyendo private (respaldo)...", 5);
             byte[] priv = io.Read(Fw.PRIVATE, Fw.BLOCK, F("private_respaldo.bin"));
@@ -860,6 +932,20 @@ namespace ReparadorV821
                 Log(string.Format("  {0,-14} {1}", "script Linux", scriptOk ? "OK (S00autofix instalado)" : scriptNow == null ? "no instalado" : "instalado pero de otra version"));
             else
                 Log(string.Format("  {0,-14} {1}", "script Linux", "no se puede revisar por FEL (se instala por ADB con la camara encendida)"));
+            bool afxOk = io == adbIo && afxNow == afxMd5 && afxRc == 0;
+            if (io == adbIo)
+            {
+                string st = afxNow == null ? "no instalado (paridad y copias de private/env sin proteger)"
+                          : afxNow != afxMd5 ? "instalado pero de otra version"
+                          : afxRc == 0 ? "OK (1 bit + paridad: uboot, private, env, boot, riscv0, rootfs, usr)"
+                          : afxRc == 1 ? "sin manifiesto (falta 'afx init')"
+                          : afxRc == 4 ? "detecto danos reparables" : afxRc == 3 ? "DANOS QUE NO PUEDE REPARAR" : "error (" + afxRc + ")";
+                Log(string.Format("  {0,-14} {1}", "afx", st));
+                if (afxNow != null && afxRc != 0)
+                    foreach (string line in afxCheckOut.Split('\n')) if (line.Trim().Length > 0) Log("      " + line.Trim());
+            }
+            else
+                Log(string.Format("  {0,-14} {1}", "afx", "no se puede revisar por FEL"));
             if (otaUsed)
             {
                 Log(string.Format("  OTA: extend_partition={0} swu_mode={1} -> la ranura extend_backup es de las actualizaciones", slot ?? "(no)", swu ?? "(no)"));
@@ -881,7 +967,7 @@ namespace ReparadorV821
             if (!write)
             {
                 Log("");
-                bool allOk = damaged == 0 && bakChk.Bits == 0 && envSame && (io != adbIo || scriptOk);
+                bool allOk = damaged == 0 && bakChk.Bits == 0 && envSame && (io != adbIo || (scriptOk && afxOk));
                 Log(allOk ? "Camara sana y protegida." + (io == xfel ? " (Falta revisar el script Linux por ADB.)" : "") : "Para corregir/proteger usar 'Reparar y proteger'.");
                 Banner(allOk ? "Camara sana y protegida" : damaged > 0 ? "Camara con " + damaged + " bit(s) danados: usar 'Reparar y proteger'" : "Camara sana, falta instalar la proteccion", allOk);
                 return;
@@ -941,7 +1027,7 @@ namespace ReparadorV821
                 if (adbIo.InstallScript(script, F("S00autofix"), scriptMd5, out so)) Log("  script Linux S00autofix instalado y verificado");
                 else { okAll = false; Log("  ERROR instalando el script Linux: " + so); }
             }
-            else if (written.Count == 0) Log("  nada que escribir");
+            else if (written.Count == 0 && afxOk) Log("  nada que escribir");
 
             // ---- verificacion
             Status("Verificando lo escrito...", 97);
@@ -951,11 +1037,37 @@ namespace ReparadorV821
                 bool eq = BytesEqual(back, w.Value);
                 if (!eq) { okAll = false; Log(string.Format("  VERIFICACION FALLO en 0x{0:X}", w.Key)); }
             }
+
+            // ---- afx: instalar/actualizar y (re)generar manifiesto, paridad y copias de private/env.
+            // Solo con la flash ya verificada contra el firmware (todo lo anterior OK).
+            if (okAll && io == adbIo && (!afxOk || written.Count > 0))
+            {
+                string ao;
+                if (afxNow != afxMd5)
+                {
+                    Status("Instalando afx...", 98);
+                    if (adbIo.InstallAfx(afxBin, F("afx"), afxMd5, out ao)) Log("  afx instalado (/etc/autofix/afx)");
+                    else { okAll = false; Log("  ERROR instalando afx: " + ao); }
+                }
+                if (okAll)
+                {
+                    Status("afx init: manifiesto, paridad y copias...", 99);
+                    int ri = adbIo.Afx("init", 180000, out ao);
+                    int rc = adbIo.Afx("check", 180000, out afxCheckOut);
+                    if (ri == 0 && rc == 0) Log("  afx init OK: paridad de rootfs+usr y copias de private/env guardadas; check OK");
+                    else
+                    {
+                        okAll = false;
+                        Log(string.Format("  ERROR en afx (init={0}, check={1}):", ri, rc));
+                        foreach (string line in (ao + "\n" + afxCheckOut).Split('\n')) if (line.Trim().Length > 0) Log("      " + line.Trim());
+                    }
+                }
+            }
             Log(string.Format("Tiempo total: {0:0} s", sw.Elapsed.TotalSeconds));
             if (okAll && io == adbIo)
             {
                 Log("");
-                Log("LISTO: camara reparada y protegida (U-Boot + script Linux). Se puede desconectar.");
+                Log("LISTO: camara reparada y protegida (U-Boot + script Linux + afx). Se puede desconectar.");
                 Banner("LISTO: camara reparada y protegida (" + damaged + " bit(s) corregidos)", true);
             }
             else if (okAll)
