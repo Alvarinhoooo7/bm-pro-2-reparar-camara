@@ -1,5 +1,5 @@
 #!/bin/sh
-# autofix v4 - camaras V821 firmware v0.1.5
+# autofix v5 - camaras V821 firmware v0.1.5 (usa /etc/autofix/afx si esta instalado)
 # Capa Linux de la auto-reparacion (U-Boot no puede escribir la flash):
 #  - riscv0: se revisa ANTES de que S00mpp lo cargue (un bit perdido ahi = kernel panic en bucle)
 #  - kernel (boot): U-Boot ya arranco con la copia si estaba danado; aqui se reescribe la flash
@@ -64,7 +64,39 @@ check_kernel() {
     fi
 }
 
+AFX=/etc/autofix/afx
+MAN=/etc/autofix/manifest
+BOOTS=/mnt/UDISK/autofix.reboots     # reinicios seguidos provocados por afx (freno anti-bucle)
+
 allowed || exit 0
-check_riscv                                              # ya, antes de S00mpp
-( sleep 15; check_kernel ) </dev/null >/dev/null 2>&1 &  # en segundo plano
+
+if [ -x $AFX ] && [ -f $MAN ]; then
+    # v5: afx revisa TODO (uboot, private, env, boot, riscv0, rootfs, usr, copias y paridad),
+    # corrige 1 bit por CRC, reconstruye con paridad o copia. Antes de S00mpp (riscv0) y de la app (usr).
+    $AFX repair </dev/null >/dev/null 2>&1
+    rc=$?
+    if [ $rc -eq 2 ]; then
+        n=$(cat $BOOTS 2>/dev/null); n=${n:-0}
+        if [ "$n" -lt 3 ]; then
+            echo $((n + 1)) > $BOOTS; sync
+            log "rootfs/usr reparados: reiniciando para cargarlos sanos (reinicio $((n + 1)))"
+            reboot -f
+        else
+            log "AVISO: ya van $n reinicios seguidos por reparaciones; no se reinicia de nuevo"
+        fi
+    else
+        rm -f $BOOTS
+    fi
+    [ $rc -eq 3 ] && log "ERROR: afx encontro danos que no pudo reparar (ver $LOG)"
+    # refresco preventivo: 2 bloques cada 6 h (toda la flash en ~26 dias) y reparar lo que aparezca
+    ( while true; do
+          sleep 21600
+          $AFX refresh 2
+          $AFX repair; [ $? -eq 2 ] && log "reparado en marcha: se recomienda reiniciar"
+      done ) </dev/null >/dev/null 2>&1 &
+else
+    # v4 (sin afx): solo kernel y riscv0, comparando con la copia
+    check_riscv                                              # ya, antes de S00mpp
+    ( sleep 15; check_kernel ) </dev/null >/dev/null 2>&1 &  # en segundo plano
+fi
 exit 0

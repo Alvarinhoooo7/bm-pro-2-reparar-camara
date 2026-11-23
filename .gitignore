@@ -22,3 +22,8 @@ Thumbs.db
 desktop.ini
 ~$*
 *.tmp
+
+# Binarios compilados de afx (se generan con zig, ver README)
+herramienta/afx/afx
+herramienta/afx/afx_pc.exe
+*.pdb

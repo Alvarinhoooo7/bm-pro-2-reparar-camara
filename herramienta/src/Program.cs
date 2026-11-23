@@ -80,7 +80,11 @@ namespace ReparadorV821
         public const uint ROOTFS = 0x3B0000, ROOTFS_USED = 0x2E0000;
         public const uint EXTEND = 0x710000, EXTEND_USED = 0x280000;
         public const uint BACKUP = 0xB20000, BACKUP_USED = 0x340000;  // copia: boot(0x2B0000) + riscv0(0x90000)
-        public const int MAX_BITS = 64;                // mas que esto = no es el mismo firmware
+        public const int MAX_BITS = 64;                // copia: mas bits que esto = no es nuestra copia
+        // Una zona se considera OTRO firmware si mas de MAX_BAD_BLOCKS de sus bloques son distintos.
+        // Si casi todos coinciden exacto, es la v0.1.5 con algunos bloques danados (bits perdidos o un
+        // bloque entero borrado por un corte de luz): se reparan con el original.
+        public const int MAX_BAD_BLOCKS = 4;
 
         // bit real que fallo en las camaras: boot+0xFBD14, 0x0B -> 0x4B
         public const int FAULT_BOOT_OFF = 0xFBD14;
@@ -839,7 +843,7 @@ namespace ReparadorV821
                 {
                     Log(string.Format("  {0,-14} DANADO: {1} bit(s) distintos en {2} bloque(s) de 64 KB", r.Name, r.Bits, r.Blocks.Count));
                     foreach (string d in r.Details) Log(d);
-                    if (r.Bits > Fw.MAX_BITS) abort = true;
+                    if (r.Blocks.Count > Fw.MAX_BAD_BLOCKS) abort = true;
                 }
             }
             string bakState;
@@ -866,7 +870,7 @@ namespace ReparadorV821
             if (abort)
             {
                 Log("");
-                Log("NO SE ESCRIBE NADA: la flash no coincide con el firmware v0.1.5 (demasiadas diferencias).");
+                Log("NO SE ESCRIBE NADA: la flash no coincide con el firmware v0.1.5 (demasiados bloques distintos).");
                 Log("Puede ser otra version de firmware u otro modelo. Revisar a mano.");
                 Banner("Firmware distinto: no se modifico nada", false);
                 return;

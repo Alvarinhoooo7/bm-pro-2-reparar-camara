@@ -38,10 +38,12 @@ Reparar Camara 2026/
 ├── herramienta/
 │   ├── src/Program.cs          código del ReparadorV821.exe (C# 5, WinForms)
 │   ├── linux/S00autofix        script de auto-reparación que se instala en la cámara
+│   ├── afx/afx.c               corrección de 1 bit + paridad (se compila para la cámara con Zig)
 │   ├── build.ps1               compila el .exe (csc de .NET Framework 4, viene con Windows)
 │   └── ReparadorV821.exe       (generado, no se sube)
 ├── pruebas/
 │   ├── simulador_uboot.py      simula el script de U-Boot sobre una imagen de flash
+│   ├── test_afx.py             20 pruebas de afx sobre la imagen real (corre afx_pc.exe)
 │   ├── armar_imagen.py         arma una imagen de 16 MB desde particiones sueltas
 │   ├── xfel_falso.cs           xfel falso que lee/escribe un .bin (probar el .exe sin cámara)
 │   ├── uart_registrador.py     registra la UART y permite mandar comandos / cortar autoboot
@@ -50,7 +52,7 @@ Reparar Camara 2026/
 ├── informe/                    informe .docx ES/EN del 2026-11-20 (diagnóstico inicial)
 ├── firmware/v0.1.5_extraido/   (no se sube) firmware extraído del .img
 ├── volcados/                   (no se sube) volcados de flash: placa2/, placa_prueba/
-└── vendor/                     (no se sube) xfel 1.4.0 + zadig 2.9, adb (platform-tools)
+└── vendor/                     (no se sube) xfel 1.4.0 + zadig 2.9, adb (platform-tools), zig 0.17.1
 ```
 
 **Qué NO se sube a GitHub (`.gitignore`) y por qué:**
@@ -189,12 +191,40 @@ Está en `herramienta/linux/S00autofix` y se instala en el overlay persistente (
 - Guardas: solo actúa si `extend_partition=extendA`, si no hay `swu_mode` (OTA) y si la copia empieza por `ANDROID!` (es nuestra y no una OTA).
 - Registro en `/mnt/UDISK/autofix.log` y en la consola (`[autofix] ...`).
 
+### Capa 3 — afx (`/etc/autofix/afx`): corrección de 1 bit + paridad para TODA la flash fija
+
+Programa en C (`herramienta/afx/afx.c`, compilado estático para RISC-V con Zig), lo llama `S00autofix` v5 al arrancar
+(`afx repair`) y cada 6 h (`afx refresh 2` + `afx repair`). Manifiesto en `/etc/autofix/manifest` (CRC32 + MD5 de cada
+bloque de 64 KB, generado con `afx init` cuando la flash está verificada contra el firmware).
+
+| Zona | Cómo la repara afx |
+|---|---|
+| `rootfs` (46 blq) y `/usr` (40 blq) | **1 bit**: el CRC ubica el bit exacto al instante (síndrome lineal del CRC32, sin probar posiciones). **Varios bits o bloque borrado**: paridad XOR (11 grupos de ≤8 bloques, guardada en `extend_backup` 54-64) |
+| `boot`, `riscv0` y sus copias | 1 bit, o desde la otra copia (bloque a bloque) |
+| `private` | Copia en `extend_backup` 52. Si difiere en **1 bit 0→1** = daño → se restaura; si no = cambio legítimo (re-emparejar) → se actualiza la copia |
+| `env` | Copia en `extend_backup` 53. Si su CRC es inválido → se restaura; si es válido y distinto → se actualiza la copia |
+| `uboot` (boot0) | Solo corrección de 1 bit (puede cambiar legítimamente: nunca se restaura entero ni se refresca) |
+| Paridad | 1 bit, o se recalcula desde los datos sanos |
+
+- **Refresco preventivo:** reescribe 2 bloques cada 6 h con sus mismos datos (toda la flash en ~26 días) para recargar las
+  celdas antes de que pierdan un bit. Un corte de luz a mitad de un refresco deja un bloque borrado, y la paridad lo rehace.
+- Si reparó `rootfs` o `/usr` (montados), `S00autofix` reinicia (freno: máximo 3 reinicios seguidos).
+- **Límite actual:** si el daño impide arrancar Linux (por ejemplo, en `/init`), afx no llega a correr (prueba 30): hay que usar
+  FEL hasta que exista el **modo rescate** (§11).
+- Códigos de salida: 0 OK, 1 error, 2 reparado y hace falta reiniciar, 3 daños no reparables, 4 (`check`) daños reparables.
+- Pruebas en el PC: `python pruebas/test_afx.py` (20 casos sobre la imagen real, incluido el caso de la cámara 89a17d3).
+- Compilar: `vendor\zig\zig.exe cc -target riscv32-linux-musl -static -O2 -s -o herramientafxfx herramientafxfx.c`
+  (y `zig cc -O2 -o afx_pc.exe afx.c` para las pruebas en el PC). Zig 0.17.1 portable: https://ziglang.org/download/
+
 ### Copia en `extend_backup`
 
 | Offset en extend_backup | Tamaño | Contenido |
 |---|---|---|
 | 0x000000 | 0x2B0000 | partición `boot` completa (boot.fex + relleno 0xFF) |
 | 0x2B0000 | 0x090000 | partición `riscv0` de esa misma cámara (incluida su cola) |
+| 0x340000 | 0x010000 | (afx) copia de `private` |
+| 0x350000 | 0x010000 | (afx) copia del `env` |
+| 0x360000 | 0x0B0000 | (afx) 11 bloques de paridad de rootfs + usr |
 
 ---
 
@@ -232,7 +262,7 @@ U-Boot 2018.07-ge71a924. Probado en la consola de la placa de prueba (con `bootd
 | `saveenv` | OK (lo único que U-Boot escribe) |
 | Cambiar el inicio de `boot_normal` | **Rompe** el arranque: `ERROR: attempting read past flash size`, `FDT_ERR_BADMAGIC`, no carga el DTB → Linux se cuelga tras `earlycon` |
 | `bootdelay=2` | Permite entrar a la consola por la UART (con 0 no da tiempo) |
-| Botón de la placa | Lo lee **U-Boot** (no el BROM) en `sunxi_ext_gpio_ctrl`: imprime `FEL key detecting ...!` cada ~50 ms durante ~3 s. **Mantenido apretado** → `Start up with extflag=2` (modo test de fábrica, `lindipcam -t`): visto 3 veces el 2026-11-23, nunca contó pulsaciones. **Varias pulsaciones** → según el usuario entra en el modo USB con el que flashea PhoenixSuit; el binario tiene `FEL key get %d times !` y `FEL mode confirmed !`, así que cuenta pulsaciones. Funciona en las cámaras muertas por esta falla porque U-Boot está sano (solo se daña el kernel). Pendiente: verlo por UART (cuántas pulsaciones hacen falta) y confirmar que xfel funciona en ese modo |
+| Botón de la placa | Lo lee **U-Boot** (no el BROM) en `sunxi_ext_gpio_ctrl`: imprime `FEL key detecting ...!` cada ~50 ms durante ~3 s. **Mantenido apretado** → `Start up with extflag=2` (modo test de fábrica, `lindipcam -t`). **5 pulsaciones** (pulsar y soltar) dentro de esa ventana → `FEL key get 1..5 times !` → `FEL mode confirmed` → **FEL del BROM** (xfel responde `AWUSBFEX ID=0x00188200(V821)`). **Validado 2026-11-23.** Tiene que estar el **USB conectado al PC** en ese momento (si no, se reinicia y arranca normal). Funciona en las cámaras muertas por esta falla porque U-Boot está sano. En FEL el driver es el de PhoenixSuit (`usbUDisc`): para xfel hay que poner WinUSB con Zadig |
 
 ---
 
@@ -285,6 +315,23 @@ Volcado de la `extend` dañada: `volcados/camara_89a17d3/extend.bin` (MD5 `5050a
 | 22 | .exe "Reparar y proteger" (modo ADB) dentro de la ventana | **Una sola pasada, 10 s**: 2 bloques reescritos + copia + env + script, todo verificado |
 | 23 | Después | Encendida >100 s sin reiniciarse, 0 errores SQUASHFS, `/usr` idéntico al original; diagnóstico "Camara sana y protegida" |
 
+### 2026-11-23 — afx (corrección de 1 bit + paridad) y modo FEL en hardware (placa de prueba)
+
+Log UART: `logs/uart/COM15_2026-11-23_afx_y_fel.log`.
+
+| # | Prueba | Resultado |
+|---|---|---|
+| 24 | Compilar afx para la cámara con Zig 0.17.1 (`riscv32-linux-musl`, estático) | ELF32 RISC-V, flags 0x5 (RVC + float doble), 103 KB; arranca en la cámara |
+| 25 | `pruebas/test_afx.py` en el PC (20 casos sobre la imagen real) | **20/20 OK**, incluido el caso real de la cámara 89a17d3 |
+| 26 | `afx init` en la placa (simulación y real) | 4 s; 210 bloques protegidos; manifiesto = firmware original bloque a bloque (137/137) |
+| 27 | Inyectar los 2 bloques reales de `/usr` de la cámara 89a17d3 → `afx repair` | **Corregidos los 2 bits** (0x07595F2 bit 5, 0x088A17A bit 3); `/usr` = MD5 original |
+| 28 | Hallazgo: `mtdblock` deja en RAM el último bloque escrito de una partición **montada**; `sync` no siempre lo baja | `afx` escribe con `fsync` y verifica con `/dev/mtdN` crudo (OK). El .exe en ADB usaba `dd`+`sync`: pasar a `conv=fsync` y verificar en crudo (pendiente) |
+| 29 | `S00autofix` v5 (llama a afx; reinicia si reparó rootfs/usr; refresco 2 bloques/6 h) — arranque sano | `boot complete` a los 16 s (antes 12: +4 s de revisión), sin bucles |
+| 30 | 4 daños a la vez (bit real del kernel + riscv0 + 2 bloques reales de /usr + **un bloque de rootfs borrado**) y reinicio | U-Boot arranca con la copia, pero **`Kernel panic: Requested init /init failed (error -5)`**: el bloque borrado contenía parte de `/init` → Linux no arranca y afx no llega a correr. **Límite de la capa Linux** (ver §11) |
+| 31 | Rescate con `bootdelay=0` mandando Enter sin parar por la UART | No interrumpe U-Boot |
+| 32 | **FEL con 5 pulsaciones** (USB conectado) + Zadig (WinUSB) + xfel | `FEL mode confirmed` → xfel: `AWUSBFEX ID=0x00188200(V821)`. Sin el USB conectado se reinicia y arranca normal |
+| 33 | .exe en **modo FEL**: diagnóstico + reparación de los 4 daños (con el nuevo criterio por bloques) | 4 zonas detectadas, **5 bloques reescritos en 31 s**; arranca: `kernel OK`, `boot complete` 12,9 s, MD5 de kernel/riscv0/rootfs/usr = originales, `afx check` todo OK |
+
 ---
 
 ## 9. Callejones sin salida (NO repetir)
@@ -306,7 +353,7 @@ Volcado de la `extend` dañada: `volcados/camara_89a17d3/extend.bin` (MD5 `5050a
 | `adb exec-out` | adbd demasiado viejo: usar `adb shell dd ... of=/tmp/x` + `adb pull` |
 | Rutas `/tmp/...` en Git Bash con adb | MSYS las convierte a rutas de Windows: usar `MSYS_NO_PATHCONV=1` |
 | Login por UART en Linux | Pide usuario y contraseña (desconocidos): no hace falta, hay ADB root |
-| Mantener apretado el botón para FEL | Da `extflag=2` (modo test), no FEL. Hay que **pulsarlo varias veces** al encender |
+| Mantener apretado el botón para FEL | Da `extflag=2` (modo test), no FEL. Hay que **pulsarlo 5 veces** al encender, con el USB conectado |
 
 ---
 
@@ -318,7 +365,7 @@ Volcado de la `extend` dañada: `volcados/camara_89a17d3/extend.bin` (MD5 `5050a
 | Bucle por el kernel, **con la protección instalada** | No hace falta nada: arranca con la copia y Linux repara |
 | Bucle por el kernel **sin protección** | FEL (pulsar el botón **varias veces** al encender) + .exe (o xfel a mano, §4); luego una pasada por ADB para instalar el script. Plan B: PhoenixSuit + .exe por ADB |
 | Bucle en Linux (panic) con `bootdelay=2` y UART | Consola U-Boot (Enter al ver `Hit any key`) → `setenv init /bin/sh` → `run bootcmd` → shell root sin rcS → `dd` desde la copia (`/dev/mtdblock7`) → cortar energía. Montar `/usr` para `md5sum`: `mount -t squashfs -o ro /dev/mtdblock6 /usr` |
-| U-Boot con `bootdelay=0` | No se puede interrumpir: FEL |
+| U-Boot con `bootdelay=0` | No se puede interrumpir (probado: mandar Enter sin parar por la UART no lo detiene): FEL con 5 pulsaciones |
 
 Comandos útiles por ADB (rutas con `MSYS_NO_PATHCONV=1` desde Git Bash):
 
@@ -336,12 +383,15 @@ Desinstalar la protección a mano (dejarla como de fábrica): escribir el env or
 
 ## 11. Pendientes y limitaciones
 
-- [ ] **Modo FEL del .exe sin probar en hardware.** Cómo entrar: **pulsar el botón varias veces** durante los ~3 s de `FEL key detecting` (mantenerlo apretado da `extflag=2`). Así entra en el modo en que flashea PhoenixSuit. Falta:
-  (1) verlo por UART (debería salir `FEL key get N times !` → `FEL mode confirmed !`) y anotar cuántas pulsaciones hacen falta;
-  (2) confirmar que **xfel** responde en ese modo (en la placa 2 sí funcionó xfel, así que probablemente es el mismo);
-  (3) correr el .exe en modo FEL sobre una cámara muerta de verdad. Plan B mientras tanto: PhoenixSuit + .exe por ADB.
+- [x] ~~**Modo FEL del .exe sin probar en hardware.**~~ **Validado el 2026-11-23** (pruebas 32-33): 5 pulsaciones con el USB conectado.
 - [ ] **Bits en el DTB** (final de `boot`, 0x294000–0x2A3000, ~2 % del kernel): U-Boot carga el DTB desde la partición dañada antes del script → Linux se cuelga. Se repara con el .exe (FEL). Idea: usar `set_working_fdt` / `fdt` con el DTB de la copia.
-- [ ] **rootfs / usr** no se auto-reparan (no caben como copia). El .exe sí los detecta y los repara. **Ya pasó en una cámara real** (modo 3, §3).
+- [ ] **Modo rescate (siguiente paso).** Si el bit perdido cae en algo que Linux necesita para arrancar (`/init`, busybox,
+  librerías de rootfs), Linux no arranca y la capa Linux no corre (prueba 30). Plan: que **U-Boot** revise también el CRC de
+  `rootfs` y `/usr` (~0,3 s) y, si están dañados, arranque el kernel con `root=/dev/mtdblock8` (jffs2 `rootfs_data`, donde vive
+  afx) e `init=/upper/etc/autofix/afx`: afx como PID 1 (estático, no necesita rootfs) repara con la paridad y reinicia.
+- [ ] Integrar afx en el .exe (instalar `/etc/autofix/afx`, `afx init`, mostrar `afx check` en el diagnóstico) y escribir en
+  ADB con `dd conv=fsync` + verificación por `/dev/mtdN` (prueba 28).
+- [x] **rootfs / usr**: ahora los cubre **afx** (corrección de 1 bit por CRC + paridad XOR, §5). Falta el modo rescate para cuando el daño impide arrancar Linux (arriba).
   Idea: **paridad XOR por grupos de bloques** en el espacio libre (quedan 0xD0000 en `extend_backup` tras la copia y
   0x190000 al final de `extend`) + tabla de MD5 por bloque de 64 KB: el bloque dañado se identifica por su MD5 y se
   reconstruye con la paridad XOR del resto del grupo. BusyBox no puede hacer XOR binario en shell → necesita un pequeño
