@@ -1,0 +1,24 @@
+# --- NO se sube a GitHub (se queda solo en el PC) ---------------------------------
+
+# Firmware del fabricante (propietario) y todo lo que lo contiene
+firmware/
+*.fex
+*.img
+
+# Volcados de flash: incluyen 'private' (emparejamiento con el monitor, licencias,
+# ldauth = datos unicos de cada camara). Nunca publicarlos.
+volcados/
+*.bin
+
+# Binarios de terceros (xfel, zadig, adb): se bajan de sus paginas oficiales (ver README)
+vendor/
+
+# El .exe compilado embebe el firmware y los binarios de terceros: se genera con build.ps1
+herramienta/*.exe
+*.exe
+
+# Basura de Windows / editores
+Thumbs.db
+desktop.ini
+~$*
+*.tmp

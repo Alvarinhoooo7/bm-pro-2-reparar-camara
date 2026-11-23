@@ -1,0 +1,674 @@
+W0101 00:03:11.198247   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:11.758] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:12.911] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:13.913] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+
+Loprocess '-/bin/login' (pid 291) exited. Scheduling for restart.
+[37;22mD/[01-01 00:03:15.067] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+starting pid 307, tty '/dev/console': '-/bin/login'
+(none) login: [37;22mD/[01-01 00:03:16.070] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:03:16.198719   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:17.224] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:18.228] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:19.382] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:20.388] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:03:21.199223   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:21.541] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:22.544] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:23.700] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:24.705] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:25.859] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:03:26.199719   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:26.861] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:28.014] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:29.017] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:30.169] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:31.174] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:03:31.200231   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:32.327] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:33.331] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:34.483] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:35.485] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:03:36.200713   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:36.640] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:37.650] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:38.796] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:39.798] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:40.952] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:03:41.201191   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:41.954] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:43.108] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:03:44.112] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:45.265] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:03:46.202084   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:03:46.270] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:03:47.422] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[0]HELLO! BOOT0 is starting!
+[2]BOOT0 commit : 1f12fbbd02
+[5]set pll start
+[8]set pll end
+[10]board init ok: use hosc 40M
+[14]DRAM use internal ZQ!!
+[17]ZQ value = 0x30
+[19]DRAM BOOT DRIVE INFO: V1.00
+[22]DRAM CLK = 520 MHz
+[24]DRAM Type = 2 (2:DDR2,3:DDR3)
+[27]DRAMC read ODT off.
+[29]DRAM ODT off.
+[31]trefi: 7.8us
+[33]DRAM Size = 64 MB
+[36]DRAM simple test OK.
+[39]dram size =64
+[41]set spif freq:100000000
+[43]spi sample_mode:0 sample_delay:25
+[48]spinor id is: 68 40 18, read cmd: 0b
+[51]Succeed in reading toc file head.
+[55]The size of toc is 30000.
+[74]Entry_name        = opensbi-lzma
+[77]LZMA: Image address............... 0x80000400
+[81]LZMA: Properties address.......... 0x80000400
+[86]LZMA: Uncompressed size address... 0x80000405
+[90]LZMA: Compressed data address..... 0x8000040d
+[95]LZMA: Destination address......... 0x83802060
+[99]LZMA: Uncompresed size............ 0xffffffff
+[103]LZMA: Compresed size.............. 0x000075ac
+[117]LZMA: Uncompressed ............... 0x0000f750
+[121]opensbi run addr:80fc0000 
+[124]Entry_name        = u-boot-lzma
+[127]LZMA: Image address............... 0x80007c00
+[132]LZMA: Properties address.......... 0x80007c00
+[136]LZMA: Uncompressed size address... 0x80007c05
+[141]LZMA: Compressed data address..... 0x80007c0d
+[145]LZMA: Destination address......... 0x83802060
+[150]LZMA: Uncompresed size............ 0xffffffff
+[154]LZMA: Compresed size.............. 0x00026dd0
+[205]LZMA: Uncompressed ............... 0x0004c000
+[209]uboot run addr:82000000 
+[213]GPT load from sector:0x0, sectors: 0x8
+[267]Jump to OpenSBI: opensbi_base = 0x80fc0000, dtb_base = 0x0, uboot_base = 0x82000000
+
+OpenSBI c19b4e8ed2bdc4057ebb0077a35f3ff672c1d68d
+   ____                    _____ ____ _____
+  / __ \                  / ____|  _ \_   _|
+ | |  | |_ __   ___ _ __ | (___ | |_) || |
+ | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
+ | |__| | |_) |  __/ | | |____) | |_) || |_
+  \____/| .__/ \___|_| |_|_____/|____/_____|
+        | |
+        |_|
+
+init msb region pma attribute
+Platform Name             : sun300iw1
+Platform Features         : medeleg
+Platform HART Count       : 1
+Platform IPI Device       : sunxi_plicsw
+Platform Timer Device     : sunxi_plmt @ 40000000Hz
+Platform Console Device   : sunxi_uart
+Platform HSM Device       : ---
+Platform PMU Device       : ---
+Platform Reboot Device    : sunxi_wdt
+Platform Shutdown Device  : sunxi_wdt
+Firmware Base             : 0x80fc0400
+Firmware Size             : 75 KB
+Runtime SBI Version       : 0.3
+
+Domain0 Name              : root
+Domain0 Boot HART         : 0
+Domain0 HARTs             : 0*
+Domain0 Region00          : 0x80fc0000-0x80fdffff ()
+Domain0 Region01          : 0x00000000-0xffffffff (R,W,X)
+Domain0 Next Address      : 0x82000000
+Domain0 Next Arg1         : 0x00000000
+Domain0 Next Mode         : S-mode
+Domain0 SysReset          : yes
+
+Boot HART ID              : 0
+Boot HART Domain          : root
+Boot HART ISA             : rv32imafdcnsux
+Boot HART Features        : scounteren,mcounteren,mcountinhibit,sscofpmf
+Boot HART PMP Count       : 64
+Boot HART PMP Granularity : 8
+Boot HART PMP Address Bits: 31
+Boot HART MHPM Count      : 4
+Boot HART MIDELEG         : 0x00000222
+Boot HART MEDELEG         : 0x0000b109
+
+
+U-Boot 2018.07-ge71a924 (May 16 2025 - 06:17:27 +0000) Allwinner Technology
+
+[00.423]DRAM:  64 MiB
+[00.426]Relocation Offset is: 01f7c000, reloc addr is: 83f7c000
+[00.432]secure enable bit: 0
+[00.435]CPU=960 MHz,PERI=3072 Mhz,AHB=192 Mhz, APB=96Mhz
+SPI ALL:   ready
+[00.443]flash init start
+[00.446]workmode = 0,storage type = 3
+sunxi_get_spif_mode()227 - get dtr_mode_enable fail -13
+sunxi_get_spif_mode()236 - get io_mode_enable fail -13
+[00.464]spi sample_mode:0 sample_delay:25
+[00.468]spif sunxi_slave->max_hz:100000000 
+SF: Detected BY25Q128( ) with page size 256 Bytes, erase size 64 KiB, total 16 MiB
+[00.480]sunxi flash init ok
+[00.486]Loading Environment from SUNXI_FLASH... OK
+[00.498]sunxi_ext_gpio_ctrl
+[00.500]Start up with extflag=0
+root_partition is rootfs
+set root to /dev/mtdblock5
+[00.508]update part info
+[00.510]update bootcmd
+[00.518]change working_fdt 0x8394bea4 to 0x8392bea4
+[00.535]## error: update_fdt_dram_para : FDT_ERR_NOTFOUND
+[00.542]update dts
+Hit any key to stop autoboot:  0 
+[00.796]no vendor_boot partition is found
+Android's image name: sun300i_riscv32
+Detect comp lzma
+ERROR: reserving fdt memory region failed (addr=80ffff00 size=100)
+[01.645]
+Starting kernel ...
+
+[    0.000000] Linux version 5.4.220 (given@Build002) (gcc version 10.4.0 (2024-02-02_nds32le-linux-glibc-v5d-bbc31ec98)) #10 PREEMPT Tue Jun 30 14:39:37 CST 2026
+[    0.000000] printk: bootconsole [earlycon0] enabled
+mount: mounting none on /dev failed: Resource busy
+private@mtdblock1:env@mtdblock2:boot@mtdblock3:riscv0@mtdblock4:rootfs@mtdblock5:extend@mtdblock6:extend_backup@mtdblock7:rootfs_data@mtdblock8:UDISK@mtdblock9
+*******333 mount /dev/by-name/extend /usr ******
+init started: BusyBox v1.33.2 (2025-03-01 16:30:16 UTC)
+starting pid 109, tty '': '/etc/preinit'
+can't run '/etc/preinit': No such file or directory
+starting pid 110, tty '': '/bin/mount -t proc proc /proc'
+mount: mounting proc on /proc failed: Resource busy
+starting pid 112, tty '': '/bin/mount -t tmpfs tmpfs /run'
+mount: mounting tmpfs on /run failed: No such file or directory
+starting pid 114, tty '': '/bin/mount -o remount,rw /'
+starting pid 115, tty '': '/bin/mkdir -p /dev/pts'
+starting pid 116, tty '': '/bin/mkdir -p /dev/shm'
+starting pid 117, tty '': '/bin/mount -a'
+starting pid 118, tty '': '/bin/hostname -F /etc/hostname'
+can't run '/bin/hostname': No such file or directory
+starting pid 119, tty '': '/etc/init.d/rcS boot'
+------run rc.final file-----
+Load mpp modules
+sh: write error: Invalid argument
+sh: write error: No such device
+wlan0     common:
+wlan0     common:
+starting pid 196, tty '/dev/console': '-/bin/login'
+(none) login: load lindsdk conf file /usr/etc/lindsdk.ini ok!
+load user conf file /mnt/UDISK/user.ini ok!
+log parameters: /tmp/log_file.log, 64000, 3
+DEBUG  : awplayer <ReadPluginEntry:194>: read plugin entry adecoder-0 fail!
+DEBUG  : awplayer <CdxPluginLoadList:221>: have config 0 entry
+DEBUG  : awplayer <CdxPluginLoadList:222>: start to open adecoder lib
+DEBUG  : awplayer <CdxPluginLoadList:202>: Load Plugin list vdecoder
+DEBUG  : awplayer <ReadPluginEntry:178>: read plugin entry vdecoder-0 ok.
+DEBUG  : awplayer <ReadPluginEntry:178>: read plugin entry vdecoder-1 ok.
+DEBUG  : awplayer <ReadPluginEntry:178>: read plugin entry vdecoder-2 ok.
+DEBUG  : awplayer <ReadPluginEntry:194>: read plugin entry vdecoder-3 fail!
+DEBUG  : awplayer <CdxPluginLoadList:221>: have config 3 entry
+DEBUG  : awplayer <CdxPluginLoadList:222>: start to open vdecoder lib
+DEBUG  : awplayer <DlOpenPlugin:96>: plugin vdecoder.h264 comment is "h264_vdecoder"
+DEBUG  : awplayer <DlOpenPlugin:97>: plugin open lib: libawh264.so
+ERROR  : awplayer <DlOpenPlugin:103>: [40;31mdlopen 'libawh264.so' fail: Error loading shared library libawh264.so: No such file or directory[0m
+DEBUG  : awplayer <CdxPluginLoadList:231>: load vdecoder id vdecoder.h264 fail!
+DEBUG  : awplayer <DlOpenPlugin:96>: plugin vdecoder.h265 comment is "h265_vdecoder"
+DEBUG  : awplayer <DlOpenPlugin:97>: plugin open lib: libawh265.so
+ERROR  : awplayer <DlOpenPlugin:103>: [40;31mdlopen 'libawh265.so' fail: Error loading shared library libawh265.so: No such file or directory[0m
+DEBUG  : awplayer <CdxPluginLoadList:231>: load vdecoder id vdecoder.h265 fail!
+DEBUG  : awplayer <DlOpenPlugin:96>: plugin vdecoder.mjpegplus comment is "mjpegplus_vdecoder"
+DEBUG  : awplayer <DlOpenPlugin:97>: plugin open lib: libawmjpegplus.so
+ERROR  : awplayer <DlOpenPlugin:103>: [40;31mdlopen 'libawmjpegplus.so' fail: Error loading shared library libawmjpegplus.so: No such file or directory[0m
+DEBUG  : awplayer <CdxPluginLoadList:231>: load vdecoder id vdecoder.mjpegplus fail!
+DEBUG  : awplayer <CdxPluginLoadList:202>: Load Plugin list plugin
+DEBUG  : awplayer <ReadPluginEntry:194>: read plugin entry plugin-0 fail!
+DEBUG  : awplayer <CdxPluginLoadList:221>: have config 0 entry
+DEBUG  : awplayer <CdxPluginLoadList:222>: start to open plugin lib
+[32;22mI/[01-01 00:00:06.991] <lindipc.c:6802>: ---- p2p wpa[0m
+private bare first 8K 
+[37;22mD/[01-01 00:00:06.993] <watchdog.c:41>: watch dog thread running ...[0m
+soft auth check ok
+[32;22mI/[01-01 00:00:07.113] <lindipc.c:6834>: lindipcam code version: 09e04e0 2026-03-26_16:09:31[0m
+private bare first 8K 
+private bare first 8K 
+private bare first 8K 
+private bare first 8K 
+[37;22mD/[01-01 00:00:07.130] <lindipc_cfg.c:977>: config version: bfc64a28[0m
+[37;22mD/[01-01 00:00:07.137] <lindipc_iocheck.c:48>: _iocheck_thread running ...[0m
+[37;22mD/[01-01 00:00:07.196] <lindipc_cfg.c:1043>: key p2p, keycode: 19, clickmode: 2, time_ms: 1000, timeout: 60[0m
+[37;22mD/[01-01 00:00:07.197] <lindipc_cfg.c:1074>: key sta, keycode: 19, clickmode: 0, time_ms: 3000, timeout: 120[0m
+[32;22mI/[01-01 00:00:07.197] <lindipc_cfg.c:1091>: bbcam_dev:wpa_auto_pair: 1[0m
+[32;22mI/[01-01 00:00:07.197] <lindipc_cfg.c:1095>: bbcam_dev:enable_wpa_unpair: 0[0m
+[32;22mI/[01-01 00:00:07.197] <lindipc_cfg.c:1099>: bbcam_dev:pair_open_record: 0[0m
+[37;22mD/[01-01 00:00:07.206] <lindipc_cfg.c:1861>: use config: /mnt/UDISK/lindipc.ini[0m
+[37;22mD/[01-01 00:00:07.208] <lindipc_cfg.c:562>: sleep_motion enable: 0[0m
+[37;22mD/[01-01 00:00:07.210] <disk_ctrl.c:273>: disk ctrl thread running...[0m
+[37;22mD/[01-01 00:00:07.216] <linduevent.c:76>: uevent recv thread running...[0m
+[33;22mW/[01-01 00:00:07.469] <disk_ctrl.c:186>: do not find tf card[0m
+[33;22mW/[01-01 00:00:07.469] <lindipc.c:5399>: no external sd card[0m
+[37;22mD/[01-01 00:00:07.469] <camera_ctrl2.c:1068>: debug enable venc_fps: 0 enable_preview: 0 save_ves: 0[0m
+[32;22mI/[01-01 00:00:07.470] <mpp_camera.c:881>: mpp source lib version: b105a1a 2026-06-16_11:45:23[0m
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0101 00:00:07.470555   192 mpi_sys.c:848] [60D[60C<AW_MPI_SYS_SetConf> kfctmpdir is [/tmp]
+I0101 00:00:07.472753   192 mpi_sys.c:1497] [60D[60C<AW_MPI_SYS_Init> ISP init
+I0101 00:00:07.473167   192 isp_version.h:32] [60D[60C<isp_version_info> [ISP]>>>>>>>>>>>>>>>>>>>> ISP VERSION INFO <<<<<<<<<<<<<<<<<<<
+IPCORE: ISP603
+branch: libisp-dev
+commit: c78bfd2228d5b40882d0a2d89c4396e62d6c867b
+date  : Tue Feb 25 20:07:42 2025 +0800
+author: <mayifei@allwinnertech.com>
+--------------------------------------------------------
+
+I0101 00:00:07.473453   192 mpi_sys.c:1499] [60D[60C<AW_MPI_SYS_Init> ISP init done
+[33;22mW/[01-01 00:00:07.473] <mpp_camera.c:1004>: buf_num_main[0] must be in range(0, 8], force buf num: 3[0m
+[37;22mD/[01-01 00:00:07.474] <mpp_camera.c:1008>: video capture: msg_cb: 0x53908, user: 0xb77bba90, 1280x720, 20(fps), sub cap: 480x272, flip: 0, mirror: 0[0m
+[37;22mD/[01-01 00:00:07.474] <camera_ctrl2.c:1158>: start camera venc: 0[0m
+[37;22mD/[01-01 00:00:07.474] <mpp_camera_yuv.c:47>: tunnel yuv(0): [vi_dev: 0, vi_chn: 0][0m
+I0101 00:00:07.474688   192 video.c:107] [60D[60C<video_init> [ISP]video device name is vin_video0
+I0101 00:00:07.475074   192 isp_dev.c:588] [60D[60C<isp_video_open> [ISP]open video device[0], detect isp0 success!
+I0101 00:00:07.475623   213 mpi_sys.c:1079] [60D[60C<MonitorEnvVarThread> detect user environment:
+I0101 00:00:07.475862   213 mpi_sys.c:1080] [60D[60C<MonitorEnvVarThread> /tmp/mpp_log_level
+I0101 00:00:07.476035   213 mpi_sys.c:1081] [60D[60C<MonitorEnvVarThread> /tmp/mpp_venc_sei_config_param
+[37;22mD/[01-01 00:00:07.476] <audio_detect.c:169>: audio_detect thread running...[0m
+I0101 00:00:07.699916   192 video.c:178] [60D[60C<video_set_fmt> [ISP]video0 fd[9] ve_online_en=0, dma_buf_num=0
+I0101 00:00:07.700806   192 mpi_isp.c:131] [60D[60C<AW_MPI_ISP_Init> IspManager already construct!
+I0101 00:00:07.702731   192 isp_dev.c:408] [60D[60C<isp_tdm_open> [ISP]tdm_rx device name is sunxi_tdm_rx.0
+W0101 00:00:07.703025   192 isp_dev.c:454] [60D[60C<isp_dev_open> [ISP_WARN]ISP0 maybe online mode, ignore tdm open failed.
+I0101 00:00:07.703869   192 isp_dev.c:480] [60D[60C<isp_dev_open> [ISP]open isp device[0] success!
+W0101 00:00:07.704693   192 isp_helper.c:98] [60D[60C<isp_ctx_save_init> [ISP_WARN]sdcard is not mounted!!!
+I0101 00:00:07.705087   192 isp_ini_parse.c:1649] [60D[60C<parser_ini_info> [ISP]prefer isp config: [gc1084_mipi], 1280x720, 20, 0, 0
+I0101 00:00:07.705312   192 isp_ini_parse.c:1656] [60D[60C<parser_ini_info> [ISP]find gc1084_mipi_1280_720_20_0 [gc1084_mipi_isp603_dy_bm188b_day] isp config
+[ISP]read restrict mark_id is 0x5c00
+chip not support rtc
+I0101 00:00:07.715287   192 isp.c:1457] [60D[60C<isp_run> [ISP]create isp0 server thread!
+[37;22mD/[01-01 00:00:07.716] <mpp_camera.c:280>: isp dev has been init cnt: 1[0m
+I0101 00:00:07.716530   212 videoInputHw.c:6247] [60D[60C<VideoInputHw_CapThread> isp[0] sensor info size:1280x720, user set size:1280x720
+I0101 00:00:07.723555   216 TDMRawProcessForTools.c:560] [60D[60C<SaveTdmRawDataThread> pRawInfo->flagpath is /tmp/isp0_1280_720_20_0/raw/raw_flag
+I0101 00:00:07.726181   212 videoInputHw.c:6298] [60D[60C<VideoInputHw_CapThread> EnableVipp[0]: vfmt.bufs:3, online:0
+I0101 00:00:07.726536   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 0 plane 0x82000000 DMABUF fd is 14
+I0101 00:00:07.726761   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 0 plane 0x83af8000 DMABUF fd is 15
+I0101 00:00:07.726973   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 1 plane 0x820e1000 DMABUF fd is 16
+I0101 00:00:07.727147   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 1 plane 0x83b69000 DMABUF fd is 17
+I0101 00:00:07.727333   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 2 plane 0x821c2000 DMABUF fd is 18
+I0101 00:00:07.727837   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 2 plane 0x83bda000 DMABUF fd is 19
+I0101 00:00:07.728049   212 videoInputHw.c:6308] [60D[60C<VideoInputHw_CapThread> pVipp[0]->mstAttr.large_dma_merge_en = 0
+I0101 00:00:07.746753   192 videoInputHw.c:1049] [60D[60C<videoInputHw_ChnEnable> receive enable vipp[0] reply: 0x0!
+E0101 00:00:07.747144   192 isp_v4l2_helper.c:96] [60D[60C<v4l2_set_control> [ISP_ERR]unable to set control: Invalid argument (22).
+E0101 00:00:07.747509   192 isp_v4l2_helper.c:96] [60D[60C<v4l2_set_control> [ISP_ERR]unable to set control: Invalid argument (22).
+[37;22mD/[01-01 00:00:07.747] <mpp_camera.c:450>: main dev opened succeed[0m
+[37;22mD/[01-01 00:00:07.748] <mpp_camera_venc.c:398>: set sub venc params:[0m
+[37;22mD/[01-01 00:00:07.748] <mpp_camera_venc.c:399>:   type        : h264[0m
+[37;22mD/[01-01 00:00:07.748] <mpp_camera_venc.c:400>:   mux_type    : ts[0m
+[37;22mD/[01-01 00:00:07.748] <mpp_camera_venc.c:401>:   size        : 1280x720[0m
+[37;22mD/[01-01 00:00:07.748] <mpp_camera_venc.c:402>:   framerate   : 20(fps)[0m
+[37;22mD/[01-01 00:00:07.748] <mpp_camera_venc.c:403>:   bitrate     : 900000(bps)[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:404>:   gop         : 40[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:405>:   mirror      : 0[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:406>:   rotate      : 0[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:407>:   crop        : [0 0, 0x0][0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:412>:   rc_mode     : 1[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:413>:   qp          : [20, 40][0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:414>:   profile     : 2[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:415>:   spspps      : 1[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:416>:   max duration: 0[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:417>:   max size    : 0[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:418>:   motion      : 1[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:419>:   out frame   : 1[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:420>:   vsrc size   : 1280x720[0m
+[37;22mD/[01-01 00:00:07.749] <mpp_camera_venc.c:421>:   superframe  : 65536[0m
+[37;22mD/[01-01 00:00:07.750] <mpp_camera_venc.c:422>:   3dnr        : 0[0m
+[37;22mD/[01-01 00:00:07.750] <mpp_camera_venc.c:124>: tunnel venc(0): [vi_dev: 0, vi_chn: 2, venc_chn: 2], encode_frame_outside: 1[0m
+E0101 00:00:07.840554   215 isp_dev.c:274] [60D[60C<isp_stat_process_buffer> [ISP_ERR]AEWB: stats error, skipping buffer.
+W0101 00:00:08.083363   215 isp_dev.c:1083] [60D[60C<isp_sensor_get_flip> [ISP_WARN]gc1084_mipi get sensor_flip failed: Invalid argument (22).
+[33;22mW/[01-01 00:00:08.083] <camera_ctrl2.c:425>: should not be here, active[0] is 0[0m
+[33;22mW/[01-01 00:00:08.083] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+[33;22mW/[01-01 00:00:08.086] <camera_ctrl2.c:425>: should not be here, active[0] is 0[0m
+[33;22mW/[01-01 00:00:08.086] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+INFO   : cedarc <cdc_log_set_level:47>: Set log level to 5 from /etc/cedarc.conf
+WARNING: cedarc <AddVENCPlugin:2188>: get local path: /usr/lib/
+WARNING: cedarc <AddVENCPlugin:2197>: load so: /usr/lib/libvenc_h264.so 
+WARNING: cedarc <AddVENCPlugin:2197>: load so: /usr/lib/libvenc_jpeg.so 
+I0101 00:00:08.091457   219 VideoEnc_Component.c:1290] [60D[60C<CedarvEncInit> VencChn[2] set VbrOptEn 0
+I0101 00:00:08.091751   219 VideoEnc_Component.c:1312] [60D[60C<CedarvEncInit> VencChn[2] set ProductCase mode: 0
+I0101 00:00:08.092107   192 VideoEnc_Component.c:4525] [60D[60C<VideoEncSetFrameRate> vencChn[2] set new framerate:20
+ERROR  : h264-enc <H264SetParameterVer2:12709>: [40;31mVENC_IndexParamSuperFrameConfig: MaxRencodeTimes is 0, will be change to be 3[0m
+[37;22mD/[01-01 00:00:08.092] <mpp_camera_venc.c:336>: VencChn[2] enable and set 2DFilter param[0m
+[37;22mD/[01-01 00:00:08.092] <mpp_camera_venc.c:364>: VencChn[2] enable and set 3DFilter param[0m
+WARNING: cedarc <CheckSetParamInt:777>: Notice: sVbrParam.nQuality is 15, but its suggested value is 1 !
+WARNING: cedarc <CheckSetParamInt:777>: Notice: sVbrParam.nIFrmBitsCoef is 15, but its suggested value is 10 !
+WARNING: cedarc <CheckSetParamInt:777>: Notice: sVbrParam.nPFrmBitsCoef is 25, but its suggested value is 10 !
+I0101 00:00:08.092966   219 VideoEnc_Component.c:949] [60D[60C<setVbvBufferConfig> user set stream buffer size[393216]bytes
+I0101 00:00:08.093192   219 VideoEnc_Component.c:959] [60D[60C<setVbvBufferConfig> user set threshSize[172032]bytes
+I0101 00:00:08.093360   219 VideoEnc_Component.c:972] [60D[60C<setVbvBufferConfig> bit rate is 878Kb, set encode vbv size 393216, frame length threshold 172032
+I0101 00:00:08.093583   219 VideoEnc_Component.c:2379] [60D[60C<CedarvVideoEncInit> DropFrameNum: 0
+I0101 00:00:08.093742   219 VideoEnc_Component.c:2395] [60D[60C<CedarvVideoEncInit> VeRecRefBufReduceEnable: 0
+I0101 00:00:08.093907   219 VideoEnc_Component.c:2484] [60D[60C<CedarvVideoEncInit> VencChn[2] Online Mode=1,Chn=0,BufNum=0,OnlineEnFlag=0,sensorID=0,bkID=0,VcuOn=1,MultiSensorOnlineEn=0
+WARNING: cedarc <resetEncoderVcu:885>: reset vcu and encoder
+W0101 00:00:08.142820   212 videoInputHw.c:6567] [60D[60C<VideoInputHw_CapThread> vi_v_frm_pts_invalid:vipp0--5828169-5603160=225009(us)
+[33;22mW/[01-01 00:00:08.143] <camera_ctrl2.c:425>: should not be here, active[0] is 0[0m
+[33;22mW/[01-01 00:00:08.143] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+I0101 00:00:08.148863   219 VideoEnc_Component.c:2577] [60D[60C<CedarvVideoEncInit> Color2Grey: 0
+I0101 00:00:08.149516   192 VideoEnc_Component.c:5684] [60D[60C<VideoEncSetMotionSearchParam> VencChn[2] motion_search en:1, dis_default_para:1, hor_region_num:10, ver_region_num:5, 20, 15.00, 20.00, 10.00
+[32;22mI/[01-01 00:00:08.149] <mpp_camera_venc.c:697>: ---- motion grids: 10x5[0m
+[37;22mD/[01-01 00:00:08.149] <mpp_camera_osd.c:50>: tunnel osd(0): [mod_id: 8, dev_id: 0, chn_id: 2][0m
+I0101 00:00:08.152734   192 isp_ini_parse.c:1649] [60D[60C<parser_ini_info> [ISP]prefer isp config: [gc1084_mipi], 1280x720, 20, 0, 0
+I0101 00:00:08.153003   192 isp_ini_parse.c:1656] [60D[60C<parser_ini_info> [ISP]find gc1084_mipi_1280_720_20_0 [gc1084_mipi_isp603_dy_bm188b_day] isp config
+[37;22mD/[01-01 00:00:08.156] <camera_ctrl2.c:1158>: start camera venc: 1[0m
+[37;22mD/[01-01 00:00:08.156] <mpp_camera_yuv.c:47>: tunnel yuv(1): [vi_dev: 4, vi_chn: 3][0m
+I0101 00:00:08.157238   192 video.c:107] [60D[60C<video_init> [ISP]video device name is vin_video4
+[37;22mD/[01-01 00:00:08.158] <camera_ctrl2.c:479>: camera_venc_thread running ...[0m
+[37;22mD/[01-01 00:00:08.158] <camera_ctrl2.c:518>: motion region 10x5[0m
+[37;22mD/[01-01 00:00:08.158] <mpp_camera_osd.c:160>: _update_osd_thread running ...[0m
+I0101 00:00:08.159307   192 isp_dev.c:588] [60D[60C<isp_video_open> [ISP]open video device[4], detect isp0 success!
+[33;22mW/[01-01 00:00:08.263] <mpp_camera_yuv.c:214>: Do AW_MPI_VI_GetFrame fail! ViDev:0  ViCh:0 ret:0xffffffff[0m
+[33;22mW/[01-01 00:00:08.491] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+[ISP_ERR]__GlobalToneMapping, line: 3042,get ldci buf fail from kernel
+[33;22mW/[01-01 00:00:08.536] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+W0101 00:00:08.593778   212 videoInputHw.c:6567] [60D[60C<VideoInputHw_CapThread> vi_v_frm_pts_invalid:vipp0--6278319-5940820=337499(us)
+I0101 00:00:08.594279   218 VideoEnc_Component.c:7924] [60D[60C<VideoEncEmptyThisBuffer> Be careful! VencChn[2] vencInputPts[6278319]-[5940820]=[337499]us, vBufSize[1280x720]
+[33;22mW/[01-01 00:00:08.594] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+[33;22mW/[01-01 00:00:08.648] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+[33;22mW/[01-01 00:00:08.704] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+I0101 00:00:08.715643   192 video.c:178] [60D[60C<video_set_fmt> [ISP]video4 fd[59] ve_online_en=0, dma_buf_num=0
+[37;22mD/[01-01 00:00:08.716] <mpp_camera.c:280>: isp dev has been init cnt: 2[0m
+I0101 00:00:08.761155   212 videoInputHw.c:6247] [60D[60C<VideoInputHw_CapThread> isp[0] sensor info size:1280x720, user set size:480x272
+[33;22mW/[01-01 00:00:08.761] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+I0101 00:00:08.765299   212 videoInputHw.c:6298] [60D[60C<VideoInputHw_CapThread> EnableVipp[4]: vfmt.bufs:3, online:0
+I0101 00:00:08.765760   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 0 plane 0x83d0c000 DMABUF fd is 60
+I0101 00:00:08.766029   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 0 plane 0x83d2c000 DMABUF fd is 61
+I0101 00:00:08.766276   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 1 plane 0x83d3c000 DMABUF fd is 62
+I0101 00:00:08.766541   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 1 plane 0x83d5c000 DMABUF fd is 63
+I0101 00:00:08.766826   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 2 plane 0x83d6c000 DMABUF fd is 64
+I0101 00:00:08.767049   212 video.c:677] [60D[60C<video_queue_buffer> [ISP]buffer 2 plane 0x83d8c000 DMABUF fd is 65
+I0101 00:00:08.767227   212 videoInputHw.c:6308] [60D[60C<VideoInputHw_CapThread> pVipp[4]->mstAttr.large_dma_merge_en = 0
+I0101 00:00:08.773342   192 videoInputHw.c:1049] [60D[60C<videoInputHw_ChnEnable> receive enable vipp[4] reply: 0x0!
+E0101 00:00:08.773728   192 isp_v4l2_helper.c:96] [60D[60C<v4l2_set_control> [ISP_ERR]unable to set control: Invalid argument (22).
+E0101 00:00:08.773989   192 isp_v4l2_helper.c:96] [60D[60C<v4l2_set_control> [ISP_ERR]unable to set control: Invalid argument (22).
+[37;22mD/[01-01 00:00:08.774] <mpp_camera.c:550>: sub dev opened succeed[0m
+[37;22mD/[01-01 00:00:08.774] <mpp_camera_venc.c:398>: set sub venc params:[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:399>:   type        : h264[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:400>:   mux_type    : ts[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:401>:   size        : 768x432[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:402>:   framerate   : 20(fps)[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:403>:   bitrate     : 400000(bps)[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:404>:   gop         : 40[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:405>:   mirror      : 0[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:406>:   rotate      : 0[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:407>:   crop        : [0 0, 0x0][0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:412>:   rc_mode     : 1[0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:413>:   qp          : [20, 40][0m
+[37;22mD/[01-01 00:00:08.775] <mpp_camera_venc.c:414>:   profile     : 2[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:415>:   spspps      : 1[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:416>:   max duration: 0[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:417>:   max size    : 0[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:418>:   motion      : 0[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:419>:   out frame   : 1[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:420>:   vsrc size   : 1280x720[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:421>:   superframe  : 32768[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:422>:   3dnr        : 0[0m
+[37;22mD/[01-01 00:00:08.776] <mpp_camera_venc.c:124>: tunnel venc(1): [vi_dev: 0, vi_chn: 3, venc_chn: 3], encode_frame_outside: 1[0m
+WARNING: cedarc <AddVENCPlugin:2188>: get local path: /usr/lib/
+WARNING: cedarc <AddVENCPlugin:2197>: load so: /usr/lib/libvenc_h264.so 
+WARNING: cedarc <AddVENCPlugin:2197>: load so: /usr/lib/libvenc_jpeg.so 
+I0101 00:00:08.780802   226 VideoEnc_Component.c:1290] [60D[60C<CedarvEncInit> VencChn[3] set VbrOptEn 0
+I0101 00:00:08.781091   226 VideoEnc_Component.c:1312] [60D[60C<CedarvEncInit> VencChn[3] set ProductCase mode: 0
+I0101 00:00:08.781527   192 VideoEnc_Component.c:4525] [60D[60C<VideoEncSetFrameRate> vencChn[3] set new framerate:20
+ERROR  : h264-enc <H264SetParameterVer2:12709>: [40;31mVENC_IndexParamSuperFrameConfig: MaxRencodeTimes is 0, will be change to be 3[0m
+[37;22mD/[01-01 00:00:08.781] <mpp_camera_venc.c:336>: VencChn[3] enable and set 2DFilter param[0m
+[37;22mD/[01-01 00:00:08.781] <mpp_camera_venc.c:364>: VencChn[3] enable and set 3DFilter param[0m
+[33;22mW/[01-01 00:00:09.114] <camera_ctrl2.c:425>: should not be here, active[1] is 0[0m
+WARNING: cedarc <CheckSetParamInt:777>: Notice: sVbrParam.nQuality is 15, but its suggested value is 1 !
+WARNING: cedarc <CheckSetParamInt:777>: Notice: sVbrParam.nIFrmBitsCoef is 15, but its suggested value is 10 !
+WARNING: cedarc <CheckSetParamInt:777>: Notice: sVbrParam.nPFrmBitsCoef is 25, but its suggested value is 10 !
+I0101 00:00:09.114747   226 VideoEnc_Component.c:949] [60D[60C<setVbvBufferConfig> user set stream buffer size[200704]bytes
+I0101 00:00:09.115007   226 VideoEnc_Component.c:959] [60D[60C<setVbvBufferConfig> user set threshSize[135168]bytes
+I0101 00:00:09.115192   226 VideoEnc_Component.c:972] [60D[60C<setVbvBufferConfig> bit rate is 390Kb, set encode vbv size 200704, frame length threshold 135168
+I0101 00:00:09.115377   226 VideoEnc_Component.c:2379] [60D[60C<CedarvVideoEncInit> DropFrameNum: 0
+I0101 00:00:09.115591   226 VideoEnc_Component.c:2395] [60D[60C<CedarvVideoEncInit> VeRecRefBufReduceEnable: 0
+I0101 00:00:09.115762   226 VideoEnc_Component.c:2484] [60D[60C<CedarvVideoEncInit> VencChn[3] Online Mode=1,Chn=0,BufNum=0,OnlineEnFlag=0,sensorID=0,bkID=0,VcuOn=1,MultiSensorOnlineEn=0
+I0101 00:00:09.131817   226 VideoEnc_Component.c:2577] [60D[60C<CedarvVideoEncInit> Color2Grey: 0
+[37;22mD/[01-01 00:00:09.133] <mpp_camera_osd.c:50>: tunnel osd(1): [mod_id: 8, dev_id: 0, chn_id: 3][0m
+I0101 00:00:09.135472   192 isp_ini_parse.c:1649] [60D[60C<parser_ini_info> [ISP]prefer isp config: [gc1084_mipi], 1280x720, 20, 0, 0
+I0101 00:00:09.135759   192 isp_ini_parse.c:1656] [60D[60C<parser_ini_info> [ISP]find gc1084_mipi_1280_720_20_0 [gc1084_mipi_isp603_dy_bm188b_day] isp config
+[37;22mD/[01-01 00:00:09.140] <camera_ctrl2.c:479>: camera_venc_thread running ...[0m
+[37;22mD/[01-01 00:00:09.140] <camera_ctrl2.c:518>: motion region 0x0[0m
+[37;22mD/[01-01 00:00:09.143] <mpp_camera_osd.c:160>: _update_osd_thread running ...[0m
+[37;22mD/[01-01 00:00:09.144] <mpp_camera_picture.c:105>: picture parameters: 480x272, make: lindenis, model: BBM, crop: [0 0, 0x0], thumb: [64x36][0m
+[37;22mD/[01-01 00:00:09.144] <mpp_camera_picture.c:52>: tunnel picture: [vi_dev: 0, vi_chn: 1, venc_chn: 1][0m
+WARNING: cedarc <AddVENCPlugin:2188>: get local path: /usr/lib/
+WARNING: cedarc <AddVENCPlugin:2197>: load so: /usr/lib/libvenc_h264.so 
+WARNING: cedarc <AddVENCPlugin:2197>: load so: /usr/lib/libvenc_jpeg.so 
+I0101 00:00:09.154544   192 VideoEnc_Component.c:4525] [60D[60C<VideoEncSetFrameRate> vencChn[1] set new framerate:0
+I0101 00:00:09.156699   229 VideoEnc_Component.c:2484] [60D[60C<CedarvVideoEncInit> VencChn[1] Online Mode=1,Chn=0,BufNum=0,OnlineEnFlag=0,sensorID=0,bkID=0,VcuOn=1,MultiSensorOnlineEn=0
+[32;22mI/[01-01 00:00:09.172] <mpp_camera_picture.c:444>: enable_osd:0[0m
+[37;22mD/[01-01 00:00:09.183] <audio_ctrl.c:541>: debug enable aenc_fps: 0 acap_fps: 0[0m
+[37;22mD/[01-01 00:00:09.195] <audio_ctrl.c:652>: v821 ver(0x4), max lineout: 31, max mic: 31[0m
+[37;22mD/[01-01 00:00:09.196] <audio_ctrl.c:662>: get fade_volume_max: 152[0m
+[37;22mD/[01-01 00:00:09.196] <audio_ctrl.c:1325>: switch speaker: 0[0m
+[37;22mD/[01-01 00:00:09.204] <demux_ctrl.c:577>: debug enable playback_fps: 0[0m
+[37;22mD/[01-01 00:00:09.204] <aplay_ctrl.c:115>: audio playback(/usr/etc/media/11_no_sdcard.g711u) thread running...[0m
+[31;22mE/[01-01 00:00:09.204] <aplay_ctrl.c:166>: open file /usr/etc/media/11_no_sdcard.g711u failed[0m
+[37;22mD/[01-01 00:00:09.204] <aplay_ctrl.c:389>: audio playback thread exit[0m
+W0101 00:00:09.211494   212 videoInputHw.c:6567] [60D[60C<VideoInputHw_CapThread> vi_v_frm_pts_invalid:vipp0--6897082-6559573=337509(us)
+I0101 00:00:09.212175   218 VideoEnc_Component.c:7924] [60D[60C<VideoEncEmptyThisBuffer> Be careful! VencChn[2] vencInputPts[6897082]-[6559573]=[337509]us, vBufSize[1280x720]
+I0101 00:00:09.212558   218 VideoEnc_Component.c:7924] [60D[60C<VideoEncEmptyThisBuffer> Be careful! VencChn[3] vencInputPts[6897082]-[6559573]=[337509]us, vBufSize[1280x720]
+W0101 00:00:09.361640   215 isp_dev.c:1083] [60D[60C<isp_sensor_get_flip> [ISP_WARN]gc1084_mipi get sensor_flip failed: Invalid argument (22).
+Successfully initialized wpa_supplicant
+[37;22mD/[01-01 00:00:12.112] <lindwifi_sta.c:566>: run wpa_supplicant(wlan0) done[0m
+[32;22mI/[01-01 00:00:12.127] <led_ctrl.c:228>: atmosphere mode: 0, iorgb: -1, -1, -1, pwm: -1, -1, -1, rgb pwm: R -1, G -1, B -1, -1, -1[0m
+Fail to export gpio110!
+[31;22mE/[01-01 00:00:12.128] <irlight_ctrl.c:110>: gpio_export(110) failed[0m
+[37;22mD/[01-01 00:00:12.130] <lindlink_wpa_sta.c:570>: _do_auto_wpa_sta_connect running ...[0m
+[37;22mD/[01-01 00:00:12.131] <lindipc_link.c:1150>: _thread_pair_p2p running ...[0m
+[32;22mI/[01-01 00:00:12.131] <led_ctrl.c:485>: set_atmosphere_color: 0[0m
+[37;22mD/[01-01 00:00:12.132] <sensor_ctrl.c:696>: temp compensation: 2.0C in 600(s)[0m
+[37;22mD/[01-01 00:00:12.132] <lindwifi_sta.c:228>: _thread_sta_event running...[0m
+[37;22mD/[01-01 00:00:12.134] <lindwifi_common.c:143>: id: 0, mac: d8:3e:eb:32:e5:55[0m
+[37;22mD/[01-01 00:00:12.134] <lindlink_wpa_sta.c:626>: p2p wait connect & ip ...[0m
+[33;22mW/[01-01 00:00:12.134] <lindipc_link.c:881>: [p2p] link msg: 4, todo ...[0m
+[37;22mD/[01-01 00:00:12.139] <sensor_ctrl.c:792>: ldr_mode:1, ldr_value_on:138, ldr_value_off:380, ldr_thr_awb:40[0m
+udhcpc: started, v1.33.2
+[37;22mD/[01-01 00:00:12.153] <sensor_ctrl.c:614>: sensor ctrl thread running...[0m
+[32;22mI/[01-01 00:00:12.157] <lindipc.c:6428>: boot complete, 1, 1[0m
+[37;22mD/[01-01 00:00:12.158] <aplay_ctrl.c:115>: audio playback(/usr/etc/media/90_boot_complete.g711u) thread running...[0m
+[37;22mD/[01-01 00:00:12.158] <audio_ctrl.c:1325>: switch speaker: 1[0m
+[37;22mD/[01-01 00:00:12.161] <audio_ctrl.c:1220>: set adev out volume: 0, 0[0m
+[32;22mI/[01-01 00:00:12.163] <adev_wrapper.c:625>: audio out device: /dev/snd/pcmC0D0p, rate: 16000, channels: 1, bits: 16, period_size: 160, period_count: 2, pcm_size: 320[0m
+[37;22mD/[01-01 00:00:12.164] <adev_wrapper.c:638>: create audio out write ringbuf[640B] ok[0m
+[32;22mI/[01-01 00:00:12.168] <audio_ctrl.c:1019>: adev_out_open ok[0m
+[31;22mE/[01-01 00:00:12.168] <adev_wrapper.c:872>: error input parameters[0m
+[37;22mD/[01-01 00:00:12.168] <audio_ctrl.c:1220>: set adev out volume: 7, 26[0m
+[37;22mD/[01-01 00:00:12.173] <adev_wrapper.c:282>: _audio_out_write_thread running ...[0m
+Setting IP address 0.0.0.0 on wlan0
+udhcpc: sending discover
+[37;22mD/[01-01 00:00:12.327] <fffilter.c:87>: filter params src fmt: 1, rate: 8000, channel: 1, period: 160[0m
+[37;22mD/[01-01 00:00:12.328] <fffilter.c:89>: filter params dst fmt: 1, rate: 16000, channel: 1, period: 320[0m
+[37;22mD/[01-01 00:00:12.328] <fffilter.c:237>: Create the aformat filter[0m
+[37;22mD/[01-01 00:00:13.284] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+udhcpc: sending discover
+[37;22mD/[01-01 00:00:13.602] <audio_ctrl.c:1220>: set adev out volume: 0, 0[0m
+[37;22mD/[01-01 00:00:13.603] <audio_ctrl.c:1325>: switch speaker: 0[0m
+[37;22mD/[01-01 00:00:13.611] <adev_wrapper.c:723>: audio device close[0m
+[37;22mD/[01-01 00:00:13.612] <adev_wrapper.c:330>: _audio_out_write_thread exit(1)[0m
+[32;22mI/[01-01 00:00:13.615] <audio_ctrl.c:1097>: adev_out_close ok[0m
+[31;22mE/[01-01 00:00:13.615] <adev_wrapper.c:872>: error input parameters[0m
+[37;22mD/[01-01 00:00:13.615] <aplay_ctrl.c:389>: audio playback thread exit[0m
+[37;22mD/[01-01 00:00:13.616] <lindipc_link.c:1592>: use mac address as the default uid: D8:3E:EB:32:AF:1F[0m
+[37;22mD/[01-01 00:00:13.616] <lindtunnel.c:109>: regist ldt sip[0m
+[37;22mD/[01-01 00:00:13.616] <ldt_device.c:155>: LDT_Dev_Initialize[0m
+[37;22mD/[01-01 00:00:13.617] <ldt_sip_impl.c:552>: ldt use mac[D8:3E:EB:32:AF:1F] as uid[0m
+[31;22mE/[01-01 00:00:13.617] <lindipc_link.c:1660>: tunnel_adapter_create((null)) failed[0m
+[37;22mD/[01-01 00:00:13.618] <audio_ctrl.c:1310>: set capture volume: 0, 0[0m
+[37;22mD/[01-01 00:00:13.619] <adev_wrapper.c:530>: force set aec delay: 50(ms)[0m
+[37;22mD/[01-01 00:00:13.619] <lindapm.c:180>: lindapm config bits: 16, channels: 1, sample_rate: 16000, period_size: 160,aec: 1(50), ns: 1, agc: 1(3, 15), volume: 0(0.000000dB, 0.000000x), speed: 0(0.000000x, mode: 0)[0m
+[37;22mD/[01-01 00:00:13.619] <lindapm.c:207>: default apm monitor mode[0m
+[37;22mD/[01-01 00:00:13.619] <lindapm.c:49>: init rtos_uvoice[0m
+[37;22mD/[01-01 00:00:13.620] <audio_ctrl.c:263>: audio apm out thread running...[0m
+[37;22mD/[01-01 00:00:13.621] <lindipc.c:5116>: _thread_yuv_sub start ...[0m
+[37;22mD/[01-01 00:00:13.621] <ldt_sip_impl.c:432>: _thread_ldt_sip_login running ...[0m
+[37;22mD/[01-01 00:00:13.621] <ldt_sip_impl.c:199>: got netif: wlan0, wait ip[0m
+private bare first 8K 
+@@@@@@@@@@@@@@@@@@@@@@@@
+id = 22805c002c00482000c3c14008782813,p->uuid = 22805c002c00482000c3c14008782813
+private bare first 8K 
+key_data_read key = 0
+[UVOICE] UvLic_Create License verify OK.
+[37;22mD/[01-01 00:00:13.733] <lindapm_rtos.c:96>: [UVLic] rtos version: 1.0.1_license_v821
+[0m
+[37;22mD/[01-01 00:00:13.735] <lindapm_rtos.c:167>: rpbuf now available[0m
+[37;22mD/[01-01 00:00:13.735] <lindapm_rtos.c:207>: UvEcnr_setEQFreq success: 200,700,1200,1750,2300,3000,3500[0m
+[37;22mD/[01-01 00:00:13.735] <lindapm_rtos.c:227>: UvEcnr_setEQ success: 5.0,4.0,-3.0,1.0,-3.0,-3.0,-3.0[0m
+[37;22mD/[01-01 00:00:13.735] <lindapm_rtos.c:237>: set loudness 4[0m
+[37;22mD/[01-01 00:00:13.736] <lindapm_rtos.c:240>: set howltime 400[0m
+[37;22mD/[01-01 00:00:13.736] <lindapm_rtos.c:243>: set echo 3[0m
+[32;22mI/[01-01 00:00:13.829] <lindapm_rtos.c:260>: get rtos 3a version: 1.0.9.70_agc_v821(400K)_2mic1ref+1mic1ref_[8K+16K][0m
+[32;22mI/[01-01 00:00:13.830] <adev_wrapper.c:625>: audio in device: /dev/snd/pcmC0D0c, rate: 16000, channels: 1, bits: 16, period_size: 160, period_count: 2, pcm_size: 320[0m
+[37;22mD/[01-01 00:00:13.830] <adev_wrapper.c:656>: create audio in read ringbuf[960B] ok[0m
+[37;22mD/[01-01 00:00:13.831] <osal_ringbuf.c:362>: ringbuf_reset[0m
+[37;22mD/[01-01 00:00:13.831] <audio_ctrl.c:811>: start ai ref cnt: 1[0m
+[37;22mD/[01-01 00:00:13.831] <adev_wrapper.c:142>: audio_input_thread runing to capture pcm buffer now ... [0m
+[37;22mD/[01-01 00:00:13.841] <adev_wrapper.c:424>: _audio_in_apm_thread running ...[0m
+[37;22mD/[01-01 00:00:13.842] <adev_wrapper.c:346>: _audio_in_read_thread running ...[0m
+[37;22mD/[01-01 00:00:13.886] <audio_ctrl.c:1310>: set capture volume: 20, 6[0m
+[37;22mD/[01-01 00:00:14.018] <audio_ctrl.c:1310>: set capture volume: 40, 12[0m
+W0101 00:00:14.178427   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:14.219] <audio_ctrl.c:1310>: set capture volume: 60, 18[0m
+I0101 00:00:14.267771   249 isp_ini_parse.c:1649] [60D[60C<parser_ini_info> [ISP]prefer isp config: [gc1084_mipi], 1280x720, 20, 0, 0
+I0101 00:00:14.268091   249 isp_ini_parse.c:1656] [60D[60C<parser_ini_info> [ISP]find gc1084_mipi_1280_720_20_0 [gc1084_mipi_isp603_dy_bm188b_day] isp config
+[32;22mI/[01-01 00:00:14.272] <media_ctrl.c:1253>: set fps:20[0m
+[37;22mD/[01-01 00:00:14.290] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+udhcpc: sending discover
+[37;22mD/[01-01 00:00:14.427] <audio_ctrl.c:1310>: set capture volume: 80, 24[0m
+[37;22mD/[01-01 00:00:14.619] <audio_ctrl.c:1310>: set capture volume: 100, 31[0m
+W0101 00:00:14.986209   215 isp_dev.c:1083] [60D[60C<isp_sensor_get_flip> [ISP_WARN]gc1084_mipi get sensor_flip failed: Invalid argument (22).
+[37;22mD/[01-01 00:00:15.440] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:16.444] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:17.134] <lindlink_wpa_sta.c:661>: _do_auto_wpa_sta_connect exit[0m
+[32;22mI/[01-01 00:00:17.234] <lindipc.c:7003>: power led delay off now[0m
+[37;22mD/[01-01 00:00:17.604] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:18.610] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:00:19.179186   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:19.764] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:20.769] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:21.921] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:22.925] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:24.078] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:00:24.179755   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:25.083] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:26.237] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:27.241] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:28.396] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:00:29.182105   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:29.400] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:30.554] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:31.558] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:32.710] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:33.714] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:00:34.182702   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:34.868] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:35.884] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:37.032] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:38.036] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:00:39.183199   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:39.189] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:40.194] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:41.346] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:42.350] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:43.504] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:00:44.183751   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:44.508] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:45.662] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:46.668] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:47.821] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:48.824] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:00:49.184477   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:49.978] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:50.982] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:52.136] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:53.148] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:00:54.184990   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:54.299] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:55.303] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:56.455] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:00:57.459] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:00:58.613] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:00:59.185523   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:00:59.622] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:00.775] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:01.778] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:02.931] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:03.937] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:04.186050   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:05.090] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+
+Lprocess '-/bin/login' (pid 196) exited. Scheduling for restart.
+[37;22mD/[01-01 00:01:06.093] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+starting pid 276, tty '/dev/console': '-/bin/login'
+(none) login: [37;22mD/[01-01 00:01:07.247] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:08.248] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:09.186678   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:09.402] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:10.406] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:11.560] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:12.562] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:13.716] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:01:14.187827   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:14.719] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:15.870] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:16.875] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:18.028] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:19.033] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:19.188459   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:20.184] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:21.186] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:22.340] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:23.353] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:24.189026   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:24.506] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:25.510] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:26.663] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:27.665] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:28.819] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:01:29.189529   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:29.823] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:30.978] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:31.979] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:33.131] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:34.133] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:34.190038   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:35.287] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:36.291] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:37.444] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:38.449] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:39.190654   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:39.602] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:40.604] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:41.757] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:42.763] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:43.917] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:01:44.191138   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:44.922] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:46.074] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:47.080] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:48.234] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:01:49.191734   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:49.235] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:50.390] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:51.393] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:52.546] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:53.559] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+W0101 00:01:54.192244   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:01:54.712] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:55.715] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:56.868] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:01:57.871] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:01:59.024] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:01:59.192838   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:02:00.027] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:02:01.181] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+[37;22mD/[01-01 00:02:02.183] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:02:03.337] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+W0101 00:02:04.195712   229 VideoEnc_Component.c:10535] [60D[60C<ComponentThread> Be careful! wait timeout. jpeg input orig frame list: Ready & Using & Used are all empty
+[37;22mD/[01-01 00:02:04.339] <lindipc_link.c:803>: [p2p] ignore event: 6[0m
+[37;22mD/[01-01 00:02:05.493] <lindipc_link.c:803>: [p2p] ignore event: 7[0m
+
+Logprocess '-/bin/login' (pid 276) exited. Scheduling for restart.
+[37;22mD/[01-01 00:02:06.498] <lindipc_link.c:803>: [p2p] ignore event: 6[0m

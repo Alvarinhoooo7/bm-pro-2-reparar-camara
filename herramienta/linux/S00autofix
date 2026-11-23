@@ -1,0 +1,70 @@
+#!/bin/sh
+# autofix v4 - camaras V821 firmware v0.1.5
+# Capa Linux de la auto-reparacion (U-Boot no puede escribir la flash):
+#  - riscv0: se revisa ANTES de que S00mpp lo cargue (un bit perdido ahi = kernel panic en bucle)
+#  - kernel (boot): U-Boot ya arranco con la copia si estaba danado; aqui se reescribe la flash
+#  - si la copia esta danada y el original sano, se rehace la copia
+# No hace nada si hay OTA (extend_backup es la ranura B de las actualizaciones).
+# Se llama S00autofix para correr antes que S00mpp (rc.final ejecuta /etc/init.d/S??* en orden).
+
+case "$1" in start) ;; *) exit 0 ;; esac
+
+BOOT_MD5=d40e8aa522d32bd98e359b4db6843a9c   # particion boot completa (0x2B0000 = 43 bloques)
+RV_MD5=bcc2764b9baad5457a5e630c88e0cda9     # imagen riscv0 (0x8FE1C = 147335 palabras de 4 bytes)
+BOOT=/dev/mtdblock3
+RV=/dev/mtdblock4
+BAK=/dev/mtdblock7                          # copia: bloques 0-42 = boot, 43-51 = riscv0
+RV_SKIP4=704512                             # 0x2B0000 / 4 (inicio de la copia de riscv0, en palabras)
+LOG=/mnt/UDISK/autofix.log
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $*" >> $LOG
+    echo "[autofix] $*" > /dev/console
+}
+md5blk() { dd if=$1 bs=65536 skip=$2 count=$3 2>/dev/null | md5sum | cut -d' ' -f1; }
+md5rv()  { dd if=$1 bs=4 skip=$2 count=147335 2>/dev/null | md5sum | cut -d' ' -f1; }
+copy()   { dd if=$1 of=$3 bs=65536 skip=$2 seek=$4 count=$5 2>/dev/null; sync; echo 3 > /proc/sys/vm/drop_caches; }
+
+allowed() {
+    [ "$(fw_printenv -n extend_partition 2>/dev/null)" = "extendA" ] || return 1
+    [ -z "$(fw_printenv -n swu_mode 2>/dev/null)" ] || return 1
+    [ "$(dd if=$BAK bs=8 count=1 2>/dev/null)" = "ANDROID!" ] || return 1   # la copia es nuestra (no una OTA)
+    return 0
+}
+
+check_riscv() {
+    # rapido: particion y copia identicas (incluye la cola) -> nada que hacer
+    [ "$(md5blk $RV 0 9)" = "$(md5blk $BAK 43 9)" ] && return
+    p=$(md5rv $RV 0); b=$(md5rv $BAK $RV_SKIP4)
+    if [ "$p" != "$RV_MD5" ] && [ "$b" = "$RV_MD5" ]; then
+        log "riscv0 danado ($p): reescribiendo desde la copia"
+        copy $BAK 43 $RV 0 9
+        [ "$(md5rv $RV 0)" = "$RV_MD5" ] && log "riscv0 reparado OK" || log "ERROR: riscv0 sigue distinto"
+    elif [ "$p" = "$RV_MD5" ] && [ "$b" != "$RV_MD5" ]; then
+        log "copia de riscv0 danada ($b): rehaciendo desde el original"
+        copy $RV 0 $BAK 43 9
+        [ "$(md5rv $BAK $RV_SKIP4)" = "$RV_MD5" ] && log "copia de riscv0 rehecha OK" || log "ERROR: la copia de riscv0 sigue distinta"
+    elif [ "$p" != "$RV_MD5" ]; then
+        log "ERROR: riscv0 y copia danados ($p / $b)"
+    fi
+}
+
+check_kernel() {
+    p=$(md5blk $BOOT 0 43); b=$(md5blk $BAK 0 43)
+    if [ "$p" != "$BOOT_MD5" ] && [ "$b" = "$BOOT_MD5" ]; then
+        log "kernel danado en la flash ($p): reescribiendo desde la copia"
+        copy $BAK 0 $BOOT 0 43
+        [ "$(md5blk $BOOT 0 43)" = "$BOOT_MD5" ] && log "kernel reparado OK" || log "ERROR: el kernel sigue distinto"
+    elif [ "$p" = "$BOOT_MD5" ] && [ "$b" != "$BOOT_MD5" ]; then
+        log "copia del kernel danada ($b): rehaciendo desde el original"
+        copy $BOOT 0 $BAK 0 43
+        [ "$(md5blk $BAK 0 43)" = "$BOOT_MD5" ] && log "copia del kernel rehecha OK" || log "ERROR: la copia del kernel sigue distinta"
+    elif [ "$p" != "$BOOT_MD5" ]; then
+        log "ERROR: kernel y copia danados ($p / $b)"
+    fi
+}
+
+allowed || exit 0
+check_riscv                                              # ya, antes de S00mpp
+( sleep 15; check_kernel ) </dev/null >/dev/null 2>&1 &  # en segundo plano
+exit 0

@@ -1,0 +1,9 @@
+# El script corre en la camara (Linux): DEBE quedar con LF o falla ("#!/bin/sh\r")
+herramienta/linux/* text eol=lf
+*.sh               text eol=lf
+*.py               text eol=lf
+
+# Logs de la UART: tal cual se capturaron (traen codigos ANSI y bytes sueltos)
+logs/**            -text
+
+*.docx             binary
