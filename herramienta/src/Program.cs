@@ -242,10 +242,18 @@ namespace ReparadorV821
                 return ms.ToArray();
             }
         }
+        // Extrae un recurso embebido. Si ya existe se compara byte a byte (no solo el tamano):
+        // un binario reemplazado en %LOCALAPPDATA% se sobrescribe antes de ejecutarlo.
         public static void Extract(string name, string path)
         {
             byte[] d = Bytes(name);
-            if (File.Exists(path) && new FileInfo(path).Length == d.Length) return;
+            if (File.Exists(path))
+            {
+                byte[] cur = File.ReadAllBytes(path);
+                bool same = cur.Length == d.Length;
+                for (int i = 0; same && i < d.Length; i++) same = cur[i] == d[i];
+                if (same) return;
+            }
             File.WriteAllBytes(path, d);
         }
     }
@@ -573,7 +581,12 @@ namespace ReparadorV821
                     Res.Extract("AdbWinApi.dll", Path.Combine(binDir, "AdbWinApi.dll"));
                     Res.Extract("AdbWinUsbApi.dll", Path.Combine(binDir, "AdbWinUsbApi.dll"));
                 }
-                catch (IOException) { /* adb.exe en uso por otra instancia: ya esta extraido */ }
+                catch (IOException)
+                {
+                    // Solo llega aqui si el archivo es DISTINTO al embebido y esta bloqueado: no usarlo.
+                    throw new Exception("adb.exe en " + binDir + " es distinto al del programa y esta en uso. " +
+                        "Cerrar otros programas que usen adb (o reiniciar el PC) y volver a abrir.");
+                }
                 adbIo = new AdbFlash { Exe = Program.Arg("--adb") ?? Path.Combine(binDir, "adb.exe") };
                 script = Res.Bytes("S00autofix");
                 scriptMd5 = Md5(script);
