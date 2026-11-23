@@ -3,9 +3,14 @@
 Investigación, reparación y **auto-reparación** de las cámaras del baby monitor BM Pro 2 que "mueren de la nada"
 (quedan en bucle de reinicio hasta reflashearlas).
 
-> **Resumen en una línea:** la flash SPI pierde **un solo bit** (una celda NOR pierde carga, 0→1).
-> Se repara reescribiendo solo el bloque dañado, y se **previene** instalando una copia del kernel + un script
-> en U-Boot y otro en Linux que detectan el bit perdido y la cámara se repara sola. Todo validado en hardware.
+> **Resumen:** la flash SPI pierde bits sueltos (celdas NOR que pierden carga, 0→1), en el kernel, en `riscv0` o en
+> `/usr`/`rootfs`, y la cámara queda en bucle. El **ReparadorV821.exe** la repara por USB (ADB si arranca, FEL con 5
+> pulsaciones si no) reescribiendo solo los bloques dañados, e instala una **protección de tres capas** (U-Boot + script de
+> Linux + afx con corrección de 1 bit y paridad, más modo rescate y refresco preventivo) con la que **la cámara se repara
+> sola**. Todo validado en hardware el 2026-11-23, incluidos 4 daños a la vez (prueba 39).
+>
+> **Estado:** protección completa funcionando en la placa de prueba; una cámara real (`2c000c3c140089a17d3`) reparada con el
+> .exe. Pendientes en §11.
 
 - Manual de uso del programa para técnicos: **[MANUAL.md](MANUAL.md)**
 - Este README es la referencia técnica y la **bitácora de pruebas**: antes de probar algo, buscar aquí si ya se hizo.
@@ -258,14 +263,28 @@ bloque de 64 KB, generado con `afx init` cuando la flash está verificada contra
 
 Manual de uso: **[MANUAL.md](MANUAL.md)**. Aspectos técnicos:
 
-- Un solo .exe (~26 MB) que embebe xfel, zadig, adb, el firmware v0.1.5 y `S00autofix`. Los extrae en `%LOCALAPPDATA%\ReparadorV821\`.
-- **Elige el modo solo:** si hay una cámara encendida por ADB usa ADB; si no, FEL (xfel).
-- Lee `private`, `env`, `boot`, `riscv0`, `rootfs`, `extend` y la copia; compara por bloques de 64 KB contra el firmware; repara solo los bloques distintos; instala la copia, el env (fusionando con el env actual de la cámara: conserva sus variables y borra las `af_*` viejas) y el script; **relee todo para verificar**.
-- No escribe nada si: hay más de 64 bits distintos (otro firmware), `extend_backup` tiene datos desconocidos, o la cámara tiene una OTA hecha o pendiente.
+- Un solo .exe (~26 MB) que embebe xfel, zadig, adb, el firmware v0.1.5, `S00autofix` y **afx**. Extrae los binarios en
+  `%LOCALAPPDATA%\ReparadorV821\` y antes de ejecutarlos los compara **byte a byte** con los embebidos (si alguien los
+  cambió, los sobrescribe; si adb.exe es distinto y está en uso, se detiene).
+- **Elige el modo solo:** si hay una cámara encendida por ADB usa ADB; si no, FEL (xfel). ¡Ojo al probar "en seco" con el
+  xfel falso: si hay una cámara conectada por USB, el .exe usa ADB y escribe en la cámara real!
+- **Flujo de "Reparar y proteger" (ADB):**
+  1. si afx ya está instalado, `afx repair` primero (repara `private`/`env` con sus copias, 1 bit / paridad);
+  2. lee `private`, `env`, `boot`, `riscv0`, `rootfs`, `extend` y la copia, y compara por bloques de 64 KB con el firmware;
+  3. reescribe solo los bloques distintos; instala la copia, el env (fusionado con el de la cámara: conserva sus variables
+     y borra todas las `af_*` viejas) y `S00autofix`;
+  4. relee todo **desde `/dev/mtdN` crudo** para verificar (las escrituras van con `dd ... conv=fsync`);
+  5. instala/actualiza `/etc/autofix/afx` y corre `afx init` + `afx check` (solo con la flash ya verificada).
+- **Por FEL** hace los pasos 2-4 (con xfel); afx y `S00autofix` se instalan después por ADB, con la cámara ya arrancando.
+- **No escribe nada si:** una zona tiene **más de 4 bloques** distintos del firmware (otro firmware; un bloque entero borrado
+  sí se repara), `extend_backup` tiene datos desconocidos, o la cámara tiene una OTA hecha o pendiente.
+- El diagnóstico da "Camara sana y protegida" solo si el firmware coincide, la copia y el env están bien y, por ADB,
+  `S00autofix` y afx son de esta versión y `afx check` da 0.
 - Registros y respaldos por cámara en `Documentos\ReparadorCamarasV821\<fecha>_<serie>\`.
-- Compilar: `powershell -File herramienta\build.ps1 [-Out nombre.exe]`.
-- Argumentos ocultos para pruebas sin clics: `--auto diag|repair|simk|simr`, `--test`, `--out <log.txt>`, `--outroot <carpeta>`, `--xfel <exe>`, `--adb <exe>`.
-  Con `pruebas/xfel_falso.cs` (compilar con `csc`) y la variable `FAKE_XFEL_IMG=<imagen.bin>` se prueba el modo FEL contra una imagen en el PC.
+- Compilar: `powershell -File herramienta\build.ps1 [-Out nombre.exe]` (antes compilar afx, ver §5 capa 3).
+- Argumentos ocultos para pruebas sin clics: `--auto diag|repair|simk|simr`, `--test`, `--out <log.txt>`, `--outroot <carpeta>`,
+  `--xfel <exe>`, `--adb <exe>`. Con `pruebas/xfel_falso.cs` (compilar con `csc`) y la variable `FAKE_XFEL_IMG=<imagen.bin>`
+  se prueba el modo FEL contra una imagen en el PC (con la cámara desconectada, o `--adb` apuntando a algo que no sea adb).
 
 ---
 
